@@ -26,12 +26,16 @@ type EnforcerHandler = int32
 
 // Server defines the backend services of casbinsvc
 type Server interface {
+	// implementations in enforcer.go
 	NewEnforcer(ctx context.Context, modelText string, adapterHandler AdapterHandler) (EnforcerHandler, error)
-	NewAdapter(ctx context.Context, driverName, connectString string, dbSpecified bool) (EnforcerHandler, error)
 	Enforce(ctx context.Context, enforcerHandler EnforcerHandler, params []string) (bool, error)
 	LoadPolicy(ctx context.Context, enforcerHandler EnforcerHandler) error
 	SavePolicy(ctx context.Context, enforcerHandler EnforcerHandler) error
 
+	// implementations in adapter.go
+	NewAdapter(ctx context.Context, driverName, connectString string, dbSpecified bool) (EnforcerHandler, error)
+
+	// implementations in management_api.go
 	AddPolicy(ctx context.Context, enforceHandler EnforcerHandler, params []string) (bool, error)
 	AddNamedPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string, params []string) (bool, error)
 	RemovePolicy(ctx context.Context, enforcerHandler EnforcerHandler, params []string) (bool, error)
@@ -42,7 +46,6 @@ type Server interface {
 	GetNamedPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string) ([][]string, error)
 	GetFilteredPolicy(ctx context.Context, enforcerHandler EnforcerHandler, fieldIndex int, fieldValues []string) ([][]string, error)
 	GetFilteredNamedPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string, fieldIndex int, fieldValues []string) ([][]string, error)
-
 	AddGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, params []string) (bool, error)
 	AddNamedGroupingPolicy(ctx context.Context, nforcerHandler EnforcerHandler, pType string, params []string) (bool, error)
 	RemoveGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, params []string) (bool, error)
@@ -53,7 +56,6 @@ type Server interface {
 	GetNamedGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string) ([][]string, error)
 	GetFilteredGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, fieldIndex int, fieldValues []string) ([][]string, error)
 	GetFilteredNamedGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string, fieldIndex int, fieldValues []string) ([][]string, error)
-
 	GetAllSubjects(ctx context.Context, enforcerHandler EnforcerHandler) ([]string, error)
 	GetAllNamedSubjects(ctx context.Context, enforcerHandler EnforcerHandler, pType string) ([]string, error)
 	GetAllObjects(ctx context.Context, enforcerHandler EnforcerHandler) ([]string, error)
@@ -62,15 +64,10 @@ type Server interface {
 	GetAllNamedActions(ctx context.Context, enforcerHandler EnforcerHandler, pType string) ([]string, error)
 	GetAllRoles(ctx context.Context, enforcerHandler EnforcerHandler) ([]string, error)
 	GetAllNamedRoles(ctx context.Context, enforcerHandler EnforcerHandler, pType string) ([]string, error)
-
 	HasPolicy(ctx context.Context, enforcerHandler EnforcerHandler, params []string) (bool, error)
 	HasNamedPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string, params []string) (bool, error)
 	HasGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, params []string) (bool, error)
 	HasNamedGroupingPolicy(ctx context.Context, enforcerHandler EnforcerHandler, pType string, params []string) (bool, error)
-
-	GetRolesForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string) ([]string, error)
-	GetImplicitRolesForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string) ([]string, error)
-	GetUsersForRole(ctx context.Context, enforcerHandler EnforcerHandler, role string) ([]string, error)
 
 	// rbac api
 	HasRoleForUser(ctx context.Context, enforcerHandler EnforcerHandler, user, role string) (bool, error)
@@ -80,6 +77,9 @@ type Server interface {
 	DeleteUser(ctx context.Context, enforcerHandler EnforcerHandler, user string) (bool, error)
 	DeleteRole(ctx context.Context, enforcerHandler EnforcerHandler, role string) (bool, error)
 	DeletePermission(ctx context.Context, enforcerHandler EnforcerHandler, permission []string) (bool, error)
+	GetRolesForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string) ([]string, error)
+	GetImplicitRolesForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string) ([]string, error)
+	GetUsersForRole(ctx context.Context, enforcerHandler EnforcerHandler, role string) ([]string, error)
 	AddPermissionForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string, permissions []string) (bool, error)
 	DeletePermissionForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string, permissions []string) (bool, error)
 	GetPermissionsForUser(ctx context.Context, enforcerHandler EnforcerHandler, user string, permissions []string) ([][]string, error)
