@@ -1,0 +1,163 @@
+// Copyright 2018 The casbin Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.proto";
+option java_outer_classname = "CasbinProto";
+
+package pb;
+
+// The Casbin service definition.
+service Casbin {
+  rpc NewEnforcer (NewEnforcerRequest) returns (NewEnforcerResponse) {}
+  rpc NewAdapter (NewAdapterRequest) returns (NewAdapterResponse) {}
+
+  rpc Enforce (EnforceRequest) returns (BoolResponse) {}
+
+  rpc LoadPolicy (EmptyRequest) returns (EmptyResponse) {}
+  rpc SavePolicy (EmptyRequest) returns (EmptyResponse) {}
+
+  rpc AddPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc AddNamedPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc RemovePolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc RemoveNamedPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc RemoveFilteredPolicy (FilteredPolicyRequest) returns (BoolResponse) {}
+  rpc RemoveFilteredNamedPolicy (FilteredPolicyRequest) returns (BoolResponse) {}
+  rpc GetPolicy (EmptyRequest) returns (Array2DResponse) {}
+  rpc GetNamedPolicy (PolicyRequest) returns (Array2DResponse) {}
+  rpc GetFilteredPolicy (FilteredPolicyRequest) returns (Array2DResponse) {}
+  rpc GetFilteredNamedPolicy (FilteredPolicyRequest) returns (Array2DResponse) {}
+
+  rpc AddGroupingPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc AddNamedGroupingPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc RemoveGroupingPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc RemoveNamedGroupingPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc RemoveFilteredGroupingPolicy (FilteredPolicyRequest) returns (BoolResponse) {}
+  rpc RemoveFilteredNamedGroupingPolicy (FilteredPolicyRequest) returns (BoolResponse) {}
+  rpc GetGroupingPolicy (EmptyRequest) returns (Array2DResponse) {}
+  rpc GetNamedGroupingPolicy(PolicyRequest) returns (Array2DResponse) {}
+  rpc GetFilteredGroupingPolicy (FilteredPolicyRequest) returns (Array2DResponse) {}
+  rpc GetFilteredNamedGroupingPolicy (FilteredPolicyRequest) returns (Array2DResponse) {}
+
+  rpc GetAllSubjects (EmptyRequest) returns (ArrayResponse) {}
+  rpc GetAllNamedSubjects (SimpleGetRequest) returns (ArrayResponse) {}
+  rpc GetAllObjects (EmptyRequest) returns (ArrayResponse) {}
+  rpc GetAllNamedObjects (SimpleGetRequest) returns (ArrayResponse) {}
+  rpc GetAllActions (EmptyRequest) returns (ArrayResponse) {}
+  rpc GetAllNamedActions (SimpleGetRequest) returns (ArrayResponse) {}
+  rpc GetAllRoles (EmptyRequest) returns (ArrayResponse) {}
+  rpc GetAllNamedRoles (SimpleGetRequest) returns (ArrayResponse) {}
+
+  rpc HasPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc HasNamedPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc HasGroupingPolicy (PolicyRequest) returns (BoolResponse) {}
+  rpc HasNamedGroupingPolicy (PolicyRequest) returns (BoolResponse) {}
+
+  rpc HasRoleForUser (UserRoleRequest) returns (BoolResponse) {}
+  rpc AddRoleForUser (UserRoleRequest) returns (BoolResponse) {}
+  rpc DeleteRoleForUser (UserRoleRequest) returns (BoolResponse) {}
+  rpc DeleteRolesForUser (UserRoleRequest) returns (BoolResponse) {}
+  rpc DeleteUser (UserRoleRequest) returns (BoolResponse) {}
+  rpc DeleteRole (UserRoleRequest) returns (BoolResponse){}
+  rpc GetRolesForUser (UserRoleRequest) returns (ArrayResponse) {}
+  rpc GetImplicitRolesForUser (UserRoleRequest) returns (ArrayResponse) {}
+  rpc GetUsersForRole (UserRoleRequest) returns (ArrayResponse) {}
+
+  rpc DeletePermission(PermissionRequest) returns (BoolResponse) {}
+  rpc AddPermissionForUser(PermissionRequest) returns (BoolResponse) {}
+  rpc DeletePermissionForUser(PermissionRequest) returns (BoolResponse) {}
+  rpc GetPermissionsForUser (PermissionRequest) returns (Array2DResponse) {}
+  rpc GetImplicitPermissionsForUser (PermissionRequest) returns (Array2DResponse) {}
+  rpc HasPermissionForUser (PermissionRequest) returns (BoolResponse) {}
+}
+
+message NewEnforcerRequest {
+  string modelText = 1;
+  int32 adapterHandler = 2;
+}
+
+message NewEnforcerResponse {
+  int32 handler = 1;
+}
+
+message NewAdapterRequest {
+  string adapterName = 1;
+  string driverName = 2;
+  string connectString = 3;
+  bool dbSpecified =4;
+}
+
+message NewAdapterResponse {
+  int32 handler = 1;
+}
+
+message EnforceRequest {
+  int32 enforcerHandler = 1;
+  repeated string params = 2;
+}
+
+message BoolResponse {
+  bool res = 1;
+}
+
+message EmptyRequest {
+  int32 handler = 1;
+}
+
+message EmptyResponse {
+}
+
+message PolicyRequest {
+  int32 enforcerHandler = 1;
+  string pType = 2;
+  repeated string params = 3;
+}
+
+message SimpleGetRequest {
+  int32 enforcerHandler = 1;
+  string pType = 2;
+}
+
+message ArrayResponse {
+  repeated string array = 1;
+}
+
+message FilteredPolicyRequest {
+  int32 enforcerHandler = 1;
+  string pType = 2;
+  int32 fieldIndex = 3;
+  repeated string fieldValues = 4;
+}
+
+message UserRoleRequest {
+  int32 enforcerHandler = 1;
+  string user = 2;
+  string role = 3;
+}
+
+message PermissionRequest {
+  int32 enforcerHandler = 1;
+  string user = 2;
+  repeated string permission = 3;
+} 
+
+message Array2DResponse {
+  message d {
+    repeated string d1 = 1;
+  }
+
+  repeated d d2 = 1;
+}
