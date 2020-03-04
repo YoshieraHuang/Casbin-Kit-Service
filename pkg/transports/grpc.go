@@ -8,6 +8,7 @@ import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 )
 
+// NewGRPCService returns a gRPC CasbinServer
 func NewGRPCService(endpoints endpoints.Set) pb.CasbinServer {
 	options := []grpctransport.ServerOption{}
 	return &grpcService{
@@ -329,7 +330,7 @@ type grpcService struct {
 	hasPermissionForUser              grpctransport.Handler
 }
 
-// NewEnforcer implements grpc server interface
+// NewEnforcer implements gRPC server interface
 func (s *grpcService) NewEnforcer(ctx context.Context, req *pb.NewEnforcerRequest) (*pb.NewEnforcerResponse, error) {
 	_, resp, err := s.newEnforcer.ServeGRPC(ctx, req)
 	if err != nil {
@@ -338,7 +339,7 @@ func (s *grpcService) NewEnforcer(ctx context.Context, req *pb.NewEnforcerReques
 	return resp.(*pb.NewEnforcerResponse), nil
 }
 
-// Enforce implements grpc server interface
+// Enforce implements gRPC server interface
 func (s *grpcService) Enforce(ctx context.Context, req *pb.EnforceRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.enforce.ServeGRPC(ctx, req)
 	if err != nil {
@@ -347,7 +348,7 @@ func (s *grpcService) Enforce(ctx context.Context, req *pb.EnforceRequest) (*pb.
 	return resp.(*pb.BoolResponse), nil
 }
 
-// LoadPolicy implements grpc server interface
+// LoadPolicy implements gRPC server interface
 func (s *grpcService) LoadPolicy(ctx context.Context, req *pb.EmptyRequest) (*pb.EmptyResponse, error) {
 	_, resp, err := s.loadPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -356,7 +357,7 @@ func (s *grpcService) LoadPolicy(ctx context.Context, req *pb.EmptyRequest) (*pb
 	return resp.(*pb.EmptyResponse), nil
 }
 
-// SavePolicy implements grpc server interface
+// SavePolicy implements gRPC server interface
 func (s *grpcService) SavePolicy(ctx context.Context, req *pb.EmptyRequest) (*pb.EmptyResponse, error) {
 	_, resp, err := s.savePolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -365,7 +366,7 @@ func (s *grpcService) SavePolicy(ctx context.Context, req *pb.EmptyRequest) (*pb
 	return resp.(*pb.EmptyResponse), nil
 }
 
-// NewAdapter implements grpc server interface
+// NewAdapter implements gRPC server interface
 func (s *grpcService) NewAdapter(ctx context.Context, req *pb.NewAdapterRequest) (*pb.NewAdapterResponse, error) {
 	_, resp, err := s.newAdapter.ServeGRPC(ctx, req)
 	if err != nil {
@@ -374,7 +375,7 @@ func (s *grpcService) NewAdapter(ctx context.Context, req *pb.NewAdapterRequest)
 	return resp.(*pb.NewAdapterResponse), nil
 }
 
-// AddPolicy implements grpc server interface
+// AddPolicy implements gRPC server interface
 func (s *grpcService) AddPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.addPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -383,7 +384,7 @@ func (s *grpcService) AddPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb
 	return resp.(*pb.BoolResponse), nil
 }
 
-// AddNamedPolicy implements grpc server interface
+// AddNamedPolicy implements gRPC server interface
 func (s *grpcService) AddNamedPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.addNamedPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -392,7 +393,7 @@ func (s *grpcService) AddNamedPolicy(ctx context.Context, req *pb.PolicyRequest)
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemovePolicy implements grpc server interface
+// RemovePolicy implements gRPC server interface
 func (s *grpcService) RemovePolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removePolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -401,7 +402,7 @@ func (s *grpcService) RemovePolicy(ctx context.Context, req *pb.PolicyRequest) (
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveNamedPolicy implements grpc server interface
+// RemoveNamedPolicy implements gRPC server interface
 func (s *grpcService) RemoveNamedPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeNamedPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -410,7 +411,7 @@ func (s *grpcService) RemoveNamedPolicy(ctx context.Context, req *pb.PolicyReque
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveFilteredPolicy implements grpc server interface
+// RemoveFilteredPolicy implements gRPC server interface
 func (s *grpcService) RemoveFilteredPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeFilteredPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -419,7 +420,7 @@ func (s *grpcService) RemoveFilteredPolicy(ctx context.Context, req *pb.Filtered
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveFilteredNamedPolicy implements grpc server interface
+// RemoveFilteredNamedPolicy implements gRPC server interface
 func (s *grpcService) RemoveFilteredNamedPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeFilteredNamedPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -428,7 +429,7 @@ func (s *grpcService) RemoveFilteredNamedPolicy(ctx context.Context, req *pb.Fil
 	return resp.(*pb.BoolResponse), nil
 }
 
-// GetPolicy implements grpc server interface
+// GetPolicy implements gRPC server interface
 func (s *grpcService) GetPolicy(ctx context.Context, req *pb.EmptyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -437,7 +438,7 @@ func (s *grpcService) GetPolicy(ctx context.Context, req *pb.EmptyRequest) (*pb.
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetNamedPolicy implements grpc server interface
+// GetNamedPolicy implements gRPC server interface
 func (s *grpcService) GetNamedPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getNamedPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -446,7 +447,7 @@ func (s *grpcService) GetNamedPolicy(ctx context.Context, req *pb.PolicyRequest)
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetFilteredPolicy implements grpc server interface
+// GetFilteredPolicy implements gRPC server interface
 func (s *grpcService) GetFilteredPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getFilteredPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -455,7 +456,7 @@ func (s *grpcService) GetFilteredPolicy(ctx context.Context, req *pb.FilteredPol
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetFilterdNamedPolicy implements grpc server interface
+// GetFilterdNamedPolicy implements gRPC server interface
 func (s *grpcService) GetFilteredNamedPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getFilteredNamedPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -464,7 +465,7 @@ func (s *grpcService) GetFilteredNamedPolicy(ctx context.Context, req *pb.Filter
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// AddGroupingPolicy implements grpc server interface
+// AddGroupingPolicy implements gRPC server interface
 func (s *grpcService) AddGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.addGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -473,7 +474,7 @@ func (s *grpcService) AddGroupingPolicy(ctx context.Context, req *pb.PolicyReque
 	return resp.(*pb.BoolResponse), nil
 }
 
-// AddNamedGroupingPolicy implements grpc server interface
+// AddNamedGroupingPolicy implements gRPC server interface
 func (s *grpcService) AddNamedGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.addNamedGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -482,7 +483,7 @@ func (s *grpcService) AddNamedGroupingPolicy(ctx context.Context, req *pb.Policy
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveGroupingPolicy implements grpc server interface
+// RemoveGroupingPolicy implements gRPC server interface
 func (s *grpcService) RemoveGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -491,7 +492,7 @@ func (s *grpcService) RemoveGroupingPolicy(ctx context.Context, req *pb.PolicyRe
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveNamedGroupingPolicy implements grpc server interface
+// RemoveNamedGroupingPolicy implements gRPC server interface
 func (s *grpcService) RemoveNamedGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeNamedGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -500,7 +501,7 @@ func (s *grpcService) RemoveNamedGroupingPolicy(ctx context.Context, req *pb.Pol
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveFilteredGroupingPolicy implements grpc server interface
+// RemoveFilteredGroupingPolicy implements gRPC server interface
 func (s *grpcService) RemoveFilteredGroupingPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeFilteredGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -509,7 +510,7 @@ func (s *grpcService) RemoveFilteredGroupingPolicy(ctx context.Context, req *pb.
 	return resp.(*pb.BoolResponse), nil
 }
 
-// RemoveFilteredNamedGroupingPolicy implements grpc server interface
+// RemoveFilteredNamedGroupingPolicy implements gRPC server interface
 func (s *grpcService) RemoveFilteredNamedGroupingPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.removeFilteredNamedGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -518,7 +519,7 @@ func (s *grpcService) RemoveFilteredNamedGroupingPolicy(ctx context.Context, req
 	return resp.(*pb.BoolResponse), nil
 }
 
-// GetGroupingPolicy implements grpc server interface
+// GetGroupingPolicy implements gRPC server interface
 func (s *grpcService) GetGroupingPolicy(ctx context.Context, req *pb.EmptyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -527,7 +528,7 @@ func (s *grpcService) GetGroupingPolicy(ctx context.Context, req *pb.EmptyReques
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetNamedGroupingPolicy implements grpc server interface
+// GetNamedGroupingPolicy implements gRPC server interface
 func (s *grpcService) GetNamedGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getNamedGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -536,7 +537,7 @@ func (s *grpcService) GetNamedGroupingPolicy(ctx context.Context, req *pb.Policy
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetFilterdGroupingPolicy implements grpc server interface
+// GetFilterdGroupingPolicy implements gRPC server interface
 func (s *grpcService) GetFilteredGroupingPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getFilteredGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -545,7 +546,7 @@ func (s *grpcService) GetFilteredGroupingPolicy(ctx context.Context, req *pb.Fil
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetFilteredNamedGroupingPolicy implements grpc server interface
+// GetFilteredNamedGroupingPolicy implements gRPC server interface
 func (s *grpcService) GetFilteredNamedGroupingPolicy(ctx context.Context, req *pb.FilteredPolicyRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getFilteredNamedGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -554,7 +555,7 @@ func (s *grpcService) GetFilteredNamedGroupingPolicy(ctx context.Context, req *p
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetAllSubjects implemnets grpc server interface
+// GetAllSubjects implemnets gRPC server interface
 func (s *grpcService) GetAllSubjects(ctx context.Context, req *pb.EmptyRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllSubjects.ServeGRPC(ctx, req)
 	if err != nil {
@@ -563,7 +564,7 @@ func (s *grpcService) GetAllSubjects(ctx context.Context, req *pb.EmptyRequest) 
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllNamedSubjects implements grpc server interface
+// GetAllNamedSubjects implements gRPC server interface
 func (s *grpcService) GetAllNamedSubjects(ctx context.Context, req *pb.SimpleGetRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllNamedSubjects.ServeGRPC(ctx, req)
 	if err != nil {
@@ -572,7 +573,7 @@ func (s *grpcService) GetAllNamedSubjects(ctx context.Context, req *pb.SimpleGet
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllObjects implements grpc server interface
+// GetAllObjects implements gRPC server interface
 func (s *grpcService) GetAllObjects(ctx context.Context, req *pb.EmptyRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllObjects.ServeGRPC(ctx, req)
 	if err != nil {
@@ -581,7 +582,7 @@ func (s *grpcService) GetAllObjects(ctx context.Context, req *pb.EmptyRequest) (
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllNamedObjects implements grpc server interface
+// GetAllNamedObjects implements gRPC server interface
 func (s *grpcService) GetAllNamedObjects(ctx context.Context, req *pb.SimpleGetRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllNamedObjects.ServeGRPC(ctx, req)
 	if err != nil {
@@ -590,7 +591,7 @@ func (s *grpcService) GetAllNamedObjects(ctx context.Context, req *pb.SimpleGetR
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllActions implements grpc server interface
+// GetAllActions implements gRPC server interface
 func (s *grpcService) GetAllActions(ctx context.Context, req *pb.EmptyRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllActions.ServeGRPC(ctx, req)
 	if err != nil {
@@ -599,7 +600,7 @@ func (s *grpcService) GetAllActions(ctx context.Context, req *pb.EmptyRequest) (
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllNamedActions implements grpc server interface
+// GetAllNamedActions implements gRPC server interface
 func (s *grpcService) GetAllNamedActions(ctx context.Context, req *pb.SimpleGetRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllNamedActions.ServeGRPC(ctx, req)
 	if err != nil {
@@ -608,7 +609,7 @@ func (s *grpcService) GetAllNamedActions(ctx context.Context, req *pb.SimpleGetR
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllRoles implements grpc server interface
+// GetAllRoles implements gRPC server interface
 func (s *grpcService) GetAllRoles(ctx context.Context, req *pb.EmptyRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllRoles.ServeGRPC(ctx, req)
 	if err != nil {
@@ -617,7 +618,7 @@ func (s *grpcService) GetAllRoles(ctx context.Context, req *pb.EmptyRequest) (*p
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetAllNamedRoles implements grpc server interface
+// GetAllNamedRoles implements gRPC server interface
 func (s *grpcService) GetAllNamedRoles(ctx context.Context, req *pb.SimpleGetRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getAllNamedRoles.ServeGRPC(ctx, req)
 	if err != nil {
@@ -626,7 +627,7 @@ func (s *grpcService) GetAllNamedRoles(ctx context.Context, req *pb.SimpleGetReq
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// HasPolicy implements grpc server interface
+// HasPolicy implements gRPC server interface
 func (s *grpcService) HasPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.hasPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -635,7 +636,7 @@ func (s *grpcService) HasPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb
 	return resp.(*pb.BoolResponse), nil
 }
 
-// HasNamedPolicy implements grpc server interface
+// HasNamedPolicy implements gRPC server interface
 func (s *grpcService) HasNamedPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.hasNamedPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -644,7 +645,7 @@ func (s *grpcService) HasNamedPolicy(ctx context.Context, req *pb.PolicyRequest)
 	return resp.(*pb.BoolResponse), nil
 }
 
-// HasGroupingPolicy implements grpc server interface
+// HasGroupingPolicy implements gRPC server interface
 func (s *grpcService) HasGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.hasGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -653,7 +654,7 @@ func (s *grpcService) HasGroupingPolicy(ctx context.Context, req *pb.PolicyReque
 	return resp.(*pb.BoolResponse), nil
 }
 
-// HasNamedGroupingPolicy implements grpc server interface
+// HasNamedGroupingPolicy implements gRPC server interface
 func (s *grpcService) HasNamedGroupingPolicy(ctx context.Context, req *pb.PolicyRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.hasNamedGroupingPolicy.ServeGRPC(ctx, req)
 	if err != nil {
@@ -662,7 +663,7 @@ func (s *grpcService) HasNamedGroupingPolicy(ctx context.Context, req *pb.Policy
 	return resp.(*pb.BoolResponse), nil
 }
 
-// HasRoleForUser implements grpc server interface
+// HasRoleForUser implements gRPC server interface
 func (s *grpcService) HasRoleForUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.hasRoleForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -671,7 +672,7 @@ func (s *grpcService) HasRoleForUser(ctx context.Context, req *pb.UserRoleReques
 	return resp.(*pb.BoolResponse), nil
 }
 
-// AddRoleForUser implements grpc server interface
+// AddRoleForUser implements gRPC server interface
 func (s *grpcService) AddRoleForUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.addRoleForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -680,7 +681,7 @@ func (s *grpcService) AddRoleForUser(ctx context.Context, req *pb.UserRoleReques
 	return resp.(*pb.BoolResponse), nil
 }
 
-// DeleteRoleForUser implements grpc server interface
+// DeleteRoleForUser implements gRPC server interface
 func (s *grpcService) DeleteRoleForUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.deleteRoleForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -689,7 +690,7 @@ func (s *grpcService) DeleteRoleForUser(ctx context.Context, req *pb.UserRoleReq
 	return resp.(*pb.BoolResponse), nil
 }
 
-// DeleteRolesForUser implements grpc server interface
+// DeleteRolesForUser implements gRPC server interface
 func (s *grpcService) DeleteRolesForUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.deleteRolesForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -698,7 +699,7 @@ func (s *grpcService) DeleteRolesForUser(ctx context.Context, req *pb.UserRoleRe
 	return resp.(*pb.BoolResponse), nil
 }
 
-// DeleteUser implements grpc server interface
+// DeleteUser implements gRPC server interface
 func (s *grpcService) DeleteUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.deleteUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -707,7 +708,7 @@ func (s *grpcService) DeleteUser(ctx context.Context, req *pb.UserRoleRequest) (
 	return resp.(*pb.BoolResponse), nil
 }
 
-// DeleteRole implements grpc server interface
+// DeleteRole implements gRPC server interface
 func (s *grpcService) DeleteRole(ctx context.Context, req *pb.UserRoleRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.deleteRole.ServeGRPC(ctx, req)
 	if err != nil {
@@ -716,7 +717,7 @@ func (s *grpcService) DeleteRole(ctx context.Context, req *pb.UserRoleRequest) (
 	return resp.(*pb.BoolResponse), nil
 }
 
-// DeletePermission implements grpc server interface
+// DeletePermission implements gRPC server interface
 func (s *grpcService) DeletePermission(ctx context.Context, req *pb.PermissionRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.deletePermission.ServeGRPC(ctx, req)
 	if err != nil {
@@ -725,7 +726,7 @@ func (s *grpcService) DeletePermission(ctx context.Context, req *pb.PermissionRe
 	return resp.(*pb.BoolResponse), nil
 }
 
-// GetRolesForUser implements grpc server interface
+// GetRolesForUser implements gRPC server interface
 func (s *grpcService) GetRolesForUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getRolesForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -734,7 +735,7 @@ func (s *grpcService) GetRolesForUser(ctx context.Context, req *pb.UserRoleReque
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetImplicitRolesForUser implements grpc server interface
+// GetImplicitRolesForUser implements gRPC server interface
 func (s *grpcService) GetImplicitRolesForUser(ctx context.Context, req *pb.UserRoleRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getImplicitRolesForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -743,7 +744,7 @@ func (s *grpcService) GetImplicitRolesForUser(ctx context.Context, req *pb.UserR
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// GetUserForRole implements grpc server interface
+// GetUserForRole implements gRPC server interface
 func (s *grpcService) GetUsersForRole(ctx context.Context, req *pb.UserRoleRequest) (*pb.ArrayResponse, error) {
 	_, resp, err := s.getUsersForRole.ServeGRPC(ctx, req)
 	if err != nil {
@@ -752,7 +753,7 @@ func (s *grpcService) GetUsersForRole(ctx context.Context, req *pb.UserRoleReque
 	return resp.(*pb.ArrayResponse), nil
 }
 
-// AddPermissionForUser implements grpc server interface
+// AddPermissionForUser implements gRPC server interface
 func (s *grpcService) AddPermissionForUser(ctx context.Context, req *pb.PermissionRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.addPermissionForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -761,7 +762,7 @@ func (s *grpcService) AddPermissionForUser(ctx context.Context, req *pb.Permissi
 	return resp.(*pb.BoolResponse), nil
 }
 
-// DeletePermissionForUser implements grpc server interface
+// DeletePermissionForUser implements gRPC server interface
 func (s *grpcService) DeletePermissionForUser(ctx context.Context, req *pb.PermissionRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.deletePermissionForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -770,7 +771,7 @@ func (s *grpcService) DeletePermissionForUser(ctx context.Context, req *pb.Permi
 	return resp.(*pb.BoolResponse), nil
 }
 
-// GetPermissionsForUser implements grpc server interface
+// GetPermissionsForUser implements gRPC server interface
 func (s *grpcService) GetPermissionsForUser(ctx context.Context, req *pb.PermissionRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getPermissionsForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -779,7 +780,7 @@ func (s *grpcService) GetPermissionsForUser(ctx context.Context, req *pb.Permiss
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// GetImplicitPermissionsForUser implements grpc server interface
+// GetImplicitPermissionsForUser implements gRPC server interface
 func (s *grpcService) GetImplicitPermissionsForUser(ctx context.Context, req *pb.PermissionRequest) (*pb.Array2DResponse, error) {
 	_, resp, err := s.getImplicitPermissionsForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -788,7 +789,7 @@ func (s *grpcService) GetImplicitPermissionsForUser(ctx context.Context, req *pb
 	return resp.(*pb.Array2DResponse), nil
 }
 
-// HasPermissionForUser implements grpc server interface
+// HasPermissionForUser implements gRPC server interface
 func (s *grpcService) HasPermissionForUser(ctx context.Context, req *pb.PermissionRequest) (*pb.BoolResponse, error) {
 	_, resp, err := s.hasPermissionForUser.ServeGRPC(ctx, req)
 	if err != nil {
@@ -797,151 +798,151 @@ func (s *grpcService) HasPermissionForUser(ctx context.Context, req *pb.Permissi
 	return resp.(*pb.BoolResponse), nil
 }
 
-// decodeGRPCNewEnforcerRequest decodes grpc NewEnforcerRequest to endpoint NewEnforcerRequest for NewEnforcer method
+// decodeGRPCNewEnforcerRequest decodes gRPC NewEnforcerRequest to endpoint NewEnforcerRequest for NewEnforcer method
 func decodeGRPCNewEnforcerRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.NewEnforcerRequest)
 	return endpoints.NewEnforcerRequest{ModelText: req.ModelText, Adapter: req.AdapterHandler}, nil
 }
 
-// encodeGRPCNewEnforcerResponse encodes endpoint NewEnforcerResponse to grpc NewEnforcerResponse
+// encodeGRPCNewEnforcerResponse encodes endpoint NewEnforcerResponse to gRPC NewEnforcerResponse
 func encodeGRPCNewEnforcerResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.NewEnforcerResponse)
 	return pb.NewEnforcerResponse{Enforcer: resp.Enforcer}, nil
 }
 
-// decodeGRPCEnforceRequest decodes grpc EnforceRequest to endpoint EnforceRequest
+// decodeGRPCEnforceRequest decodes gRPC EnforceRequest to endpoint EnforceRequest
 func decodeGRPCEnforceRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EnforceRequest)
 	return endpoints.EnforceRequest{Enforcer: req.Enforcer, Params: req.Params}, nil
 }
 
-// encodeGRPCEnforceResponse decodes endpoint EnforceResponse to grpc BoolResponse
+// encodeGRPCEnforceResponse decodes endpoint EnforceResponse to gRPC BoolResponse
 func encodeGRPCEnforceResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.EnforceResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCLoadPolicyRequest decodeds grpc EmptyRequest to endpoint LoadPolicyRequest
+// decodeGRPCLoadPolicyRequest decodeds gRPC EmptyRequest to endpoint LoadPolicyRequest
 func decodeGRPCLoadPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EmptyRequest)
 	return endpoints.LoadPolicyRequest{Enforcer: req.Enforcer}, nil
 }
 
-// encodeGRPCLoadPolicyResponse encodes endpoint LoadPolicyResponse to grpc EmptyResponse
+// encodeGRPCLoadPolicyResponse encodes endpoint LoadPolicyResponse to gRPC EmptyResponse
 func encodeGRPCLoadPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.LoadPolicyResponse)
 	return pb.EmptyResponse{Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCSavePolicyRequest decodes grpc EmptyRequest to endpoint EmptyResponse
+// decodeGRPCSavePolicyRequest decodes gRPC EmptyRequest to endpoint EmptyResponse
 func decodeGRPCSavePolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EmptyRequest)
 	return endpoints.SavePolicyRequest{Enforcer: req.Enforcer}, nil
 }
 
-// encodeGRPCSavePolicyResponse encodes endpoint SavePolicyRequest to grpc EmptyResponse
+// encodeGRPCSavePolicyResponse encodes endpoint SavePolicyRequest to gRPC EmptyResponse
 func encodeGRPCSavePolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.SavePolicyResponse)
 	return pb.EmptyResponse{Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCNewAdapterRequest decodes grpc NewAdapterRequest to endpoint NewAdapterRequest
+// decodeGRPCNewAdapterRequest decodes gRPC NewAdapterRequest to endpoint NewAdapterRequest
 func decodeGRPCNewAdapterRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.NewAdapterRequest)
 	return endpoints.NewAdapterRequest{DriverName: req.DriverName, ConnectString: req.ConnectString, DbSpecified: req.DbSpecified}, nil
 }
 
-// encodeGRPCNewAdapterResponse encodes endpoint NewAdapterResponse to grpc NewAdapterResponse
+// encodeGRPCNewAdapterResponse encodes endpoint NewAdapterResponse to gRPC NewAdapterResponse
 func encodeGRPCNewAdapterResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.NewAdapterResponse)
 	return pb.NewAdapterResponse{Handler: resp.Adapter, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCAddPolicyRequest decodes grpc PolicyRequest to endpoint AddPolicyRequest
+// decodeGRPCAddPolicyRequest decodes gRPC PolicyRequest to endpoint AddPolicyRequest
 func decodeGRPCAddPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.AddPolicyRequest{Enforcer: req.Enforcer, Params: req.Params}, nil
 }
 
-// encodeGRPCAddPolicyResponse encodes endpoint AddPolicyResponse to grpc BoolResponse
+// encodeGRPCAddPolicyResponse encodes endpoint AddPolicyResponse to gRPC BoolResponse
 func encodeGRPCAddPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.AddPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCAddNamedPolicyRequest decodes grpc PolicyRequest to endpoint AddNamedPolicyRequest
+// decodeGRPCAddNamedPolicyRequest decodes gRPC PolicyRequest to endpoint AddNamedPolicyRequest
 func decodeGRPCAddNamedPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.AddNamedPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, Params: req.Params}, nil
 }
 
-// encodeGRPCAddNamedPolicyResponse encodes endpoint AddNamedPolicyResponse to grpc BoolResponse
+// encodeGRPCAddNamedPolicyResponse encodes endpoint AddNamedPolicyResponse to gRPC BoolResponse
 func encodeGRPCAddNamedPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.AddNamedPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemovePolicyRequest decodes grpc PolicyRequest to endpoint RemovePolicyRequest
+// decodeGRPCRemovePolicyRequest decodes gRPC PolicyRequest to endpoint RemovePolicyRequest
 func decodeGRPCRemovePolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.RemovePolicyRequest{Enforcer: req.Enforcer, Params: req.Params}, nil
 }
 
-// encodeGRPCRemovePolicyResponse encodes endpoint RemovePolicyResponse to grpc BoolResponse
+// encodeGRPCRemovePolicyResponse encodes endpoint RemovePolicyResponse to gRPC BoolResponse
 func encodeGRPCRemovePolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemovePolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveNamedPolicyRequest decodes grpc PolicyRequest to endpoint RemoveNamedPolicyRequest
+// decodeGRPCRemoveNamedPolicyRequest decodes gRPC PolicyRequest to endpoint RemoveNamedPolicyRequest
 func decodeGRPCRemoveNamedPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.RemoveNamedPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, Params: req.Params}, nil
 }
 
-// encodeGRPCRemoveNamedPolicyResponse encodes endpoint RemoveNamedPolicyResponse to grpc BoolReponse
+// encodeGRPCRemoveNamedPolicyResponse encodes endpoint RemoveNamedPolicyResponse to gRPC BoolReponse
 func encodeGRPCRemoveNamedPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveNamedPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveFilteredPolicyRequest decodes grpc FilteredPolicyRequest to endpoint RemoveFilteredPolicyRequest
+// decodeGRPCRemoveFilteredPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint RemoveFilteredPolicyRequest
 func decodeGRPCRemoveFilteredPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.RemoveFilteredPolicyRequest{Enforcer: req.Enforcer, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCRemoveFilteredPolicyResponse encodes endpoint RemoveFilteredPolicyResponse to grpc BoolReponse
+// encodeGRPCRemoveFilteredPolicyResponse encodes endpoint RemoveFilteredPolicyResponse to gRPC BoolReponse
 func encodeGRPCRemoveFilteredPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveFilteredPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveFilteredNamedPolicyRequest decodes grpc FilteredPolicyRequest to endpoint RemoveFilteredNamedPolicyRequest
+// decodeGRPCRemoveFilteredNamedPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint RemoveFilteredNamedPolicyRequest
 func decodeGRPCRemoveFilteredNamedPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.RemoveFilteredNamedPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCRemoveFilteredNamedPolicyResponse encodes endpoint RemoveFilteredNamedPolicyResponse to grpc BoolResponse
+// encodeGRPCRemoveFilteredNamedPolicyResponse encodes endpoint RemoveFilteredNamedPolicyResponse to gRPC BoolResponse
 func encodeGRPCRemoveFilteredNamedPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveFilteredNamedPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetPolicyRequest decodes grpc EmptyRequest to endpoint GetPolicyRequest
+// decodeGRPCGetPolicyRequest decodes gRPC EmptyRequest to endpoint GetPolicyRequest
 func decodeGRPCGetPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EmptyRequest)
 	return endpoints.GetPolicyRequest{Enforcer: req.Enforcer}, nil
 }
 
-// encodeGRPCGetPolicyResponse encodes endpoint GetPolicyResponse to grpc Array2DResponse
+// encodeGRPCGetPolicyResponse encodes endpoint GetPolicyResponse to gRPC Array2DResponse
 func encodeGRPCGetPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetNamedPolicyRequest decode grpc PolicyRequest to endpoint GetNamedPolcyRequest
+// decodeGRPCGetNamedPolicyRequest decode gRPC PolicyRequest to endpoint GetNamedPolcyRequest
 func decodeGRPCGetNamedPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.GetNamedPolicyRequest{Enforcer: req.Enforcer, PType: req.PType}, nil
@@ -952,187 +953,187 @@ func encodeGRPCGetNamedPolicyResponse(_ context.Context, response interface{}) (
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetFilteredPolicyRequest decodes grpc FilteredPolicyRequest to endpoint GetFilteredPolicyRequest
+// decodeGRPCGetFilteredPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint GetFilteredPolicyRequest
 func decodeGRPCGetFilteredPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.GetFilteredPolicyRequest{Enforcer: req.Enforcer, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCGetFilteredPolicyResponse encodes endpoint GetFilteredPolicyResponse to grpc Array2DResponse
+// encodeGRPCGetFilteredPolicyResponse encodes endpoint GetFilteredPolicyResponse to gRPC Array2DResponse
 func encodeGRPCGetFilteredPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetFilteredPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetFilteredNamedPolicyRequest decodes grpc FilteredPolicyRequest to endpoint GetFilteredNamedPolicyRequest
+// decodeGRPCGetFilteredNamedPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint GetFilteredNamedPolicyRequest
 func decodeGRPCGetFilteredNamedPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.GetFilteredNamedPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCGetFilteredNamedPolicyResponse encodes endpoint GetFilteredNamedPolicyResponse to grpc Array2DResponse
+// encodeGRPCGetFilteredNamedPolicyResponse encodes endpoint GetFilteredNamedPolicyResponse to gRPC Array2DResponse
 func encodeGRPCGetFilteredNamedPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetFilteredNamedPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCAddGroupingPolicyRequest decodes grpc PolicyRequest to endpoint AddGroupingPolicyRequest
+// decodeGRPCAddGroupingPolicyRequest decodes gRPC PolicyRequest to endpoint AddGroupingPolicyRequest
 func decodeGRPCAddGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.AddGroupingPolicyRequest{Enforcer: req.Enforcer, Params: req.Params}, nil
 }
 
-// encodeGRPCAddGroupingPolicyResponse encodes endpoint AddGroupingPolicyResponse to grpc BoolResponse
+// encodeGRPCAddGroupingPolicyResponse encodes endpoint AddGroupingPolicyResponse to gRPC BoolResponse
 func encodeGRPCAddGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.AddGroupingPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCAddNamedGroupingPolicyRequest decodes grpc PolicyRequest to endpoint AddNamedGroupingPolicyRequest
+// decodeGRPCAddNamedGroupingPolicyRequest decodes gRPC PolicyRequest to endpoint AddNamedGroupingPolicyRequest
 func decodeGRPCAddNamedGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.AddNamedGroupingPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, Params: req.Params}, nil
 }
 
-// encodeGRPCAddNamedGrouopingPolicyResponse encodes endpoint AddNamedGroupingPolicyResponse to grpc BoolResponse
+// encodeGRPCAddNamedGrouopingPolicyResponse encodes endpoint AddNamedGroupingPolicyResponse to gRPC BoolResponse
 func encodeGRPCAddNamedGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.AddNamedGroupingPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveGroupingPolicyRequest decodes grpc PolicyRequest to endpoint RemoveGroupingPolicyRequest
+// decodeGRPCRemoveGroupingPolicyRequest decodes gRPC PolicyRequest to endpoint RemoveGroupingPolicyRequest
 func decodeGRPCRemoveGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.RemoveGroupingPolicyRequest{Enforcer: req.Enforcer, Params: req.Params}, nil
 }
 
-// encodeGRPCRemoveGroupingPolicyResponse encodes endpoint RemoveGroupingPolicyResponse to grpc BoolResponse
+// encodeGRPCRemoveGroupingPolicyResponse encodes endpoint RemoveGroupingPolicyResponse to gRPC BoolResponse
 func encodeGRPCRemoveGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveGroupingPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveNamedGroupingPolicyRequest decodes grpc PolicyRequest to endpoint RemoveNamedGroupingPolicyRequest
+// decodeGRPCRemoveNamedGroupingPolicyRequest decodes gRPC PolicyRequest to endpoint RemoveNamedGroupingPolicyRequest
 func decodeGRPCRemoveNamedGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.RemoveNamedGroupingPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, Params: req.Params}, nil
 }
 
-// encodeGRPCRemoveNamedGroupingPolicyReponse encodes endpoint RemoveNamedGroupingPolicyReponse to grpc BoolResponse
+// encodeGRPCRemoveNamedGroupingPolicyReponse encodes endpoint RemoveNamedGroupingPolicyReponse to gRPC BoolResponse
 func encodeGRPCRemoveNamedGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveNamedGroupingPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveFilteredGroupingPolicyRequest decodes grpc FilteredPolicyRequest to endpoint RemoveFilteredGroupingPolicyRequest
+// decodeGRPCRemoveFilteredGroupingPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint RemoveFilteredGroupingPolicyRequest
 func decodeGRPCRemoveFilteredGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.RemoveFilteredGroupingPolicyRequest{Enforcer: req.Enforcer, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCRemoveFilteredGroupingPolicyResponse encodes endpoint RemoveFilteredGroupingPolicyResponse to grpc BoolResponse
+// encodeGRPCRemoveFilteredGroupingPolicyResponse encodes endpoint RemoveFilteredGroupingPolicyResponse to gRPC BoolResponse
 func encodeGRPCRemoveFilteredGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveFilteredGroupingPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCRemoveFilteredNamedGroupingPolicyRequest decodes grpc FilteredPolicyRequest to endpoint RemoveFilteredNamedGroupingPolicyRequest
+// decodeGRPCRemoveFilteredNamedGroupingPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint RemoveFilteredNamedGroupingPolicyRequest
 func decodeGRPCRemoveFilteredNamedGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.RemoveFilteredNamedGroupingPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCRemoveFilteredNamedGroupingPolicyResponse encodes endpoint RemoveFilteredNamedGroupingPolicyResponse to grpc BoolResponse
+// encodeGRPCRemoveFilteredNamedGroupingPolicyResponse encodes endpoint RemoveFilteredNamedGroupingPolicyResponse to gRPC BoolResponse
 func encodeGRPCRemoveFilteredNamedGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.RemoveFilteredNamedGroupingPolicyResponse)
 	return pb.BoolResponse{Res: resp.Result, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetGroupingPolicyRequest decodes grpc EmptyRequest to endpoint GetGroupingPolicyRequest
+// decodeGRPCGetGroupingPolicyRequest decodes gRPC EmptyRequest to endpoint GetGroupingPolicyRequest
 func decodeGRPCGetGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EmptyRequest)
 	return endpoints.GetGroupingPolicyRequest{Enforcer: req.Enforcer}, nil
 }
 
-// encodeGRPCGetGroupingPolicyResponse encodes endpoint GetGroupingPolicyResponse to grpc Array2DResponse
+// encodeGRPCGetGroupingPolicyResponse encodes endpoint GetGroupingPolicyResponse to gRPC Array2DResponse
 func encodeGRPCGetGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetGroupingPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCNamedGroupingPolicyRequest decodes grpc PolicyRequest to endpoint GetNamedGroupingPolicyRequest
+// decodeGRPCNamedGroupingPolicyRequest decodes gRPC PolicyRequest to endpoint GetNamedGroupingPolicyRequest
 func decodeGRPCGetNamedGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.PolicyRequest)
 	return endpoints.GetNamedGroupingPolicyRequest{Enforcer: req.Enforcer, PType: req.PType}, nil
 }
 
-// encodeGRPCGetNamedGroupingPolicyResponse encodes endpoint GetNamedGroupingPolicyResponse to grpc Array2DResponse
+// encodeGRPCGetNamedGroupingPolicyResponse encodes endpoint GetNamedGroupingPolicyResponse to gRPC Array2DResponse
 func encodeGRPCGetNamedGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetNamedGroupingPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCVGetFilteredGroupingPolicyRequest decodes gprc FilteredPolicyRequest to endpoint GetFilteredGroupingPolicyRequest
+// decodeGRPCVGetFilteredGroupingPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint GetFilteredGroupingPolicyRequest
 func decodeGRPCGetFilteredGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.GetFilteredGroupingPolicyRequest{Enforcer: req.Enforcer, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCGetFilteredGroupingPolicyResponse encodes endpoint GetFilteredGroupingPolicyResponse to grpc Array2DResponse
+// encodeGRPCGetFilteredGroupingPolicyResponse encodes endpoint GetFilteredGroupingPolicyResponse to gRPC Array2DResponse
 func encodeGRPCGetFilteredGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetFilteredGroupingPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetFilteredNamedGroupingPolicyRequest decodes grpc FilteredPolicyRequest to endpoint GetFilteredNamedGroupingPolicyRequest
+// decodeGRPCGetFilteredNamedGroupingPolicyRequest decodes gRPC FilteredPolicyRequest to endpoint GetFilteredNamedGroupingPolicyRequest
 func decodeGRPCGetFilteredNamedGroupingPolicyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.FilteredPolicyRequest)
 	return endpoints.GetFilteredNamedGroupingPolicyRequest{Enforcer: req.Enforcer, PType: req.PType, FieldIndex: int(req.FieldIndex), FieldValues: req.FieldValues}, nil
 }
 
-// encodeGRPCGetFilteredNamedGroupingPolicyResponse encodes endpoint GetFilteredNamedGroupingPolicyRequest to grpc Array2DResponse
+// encodeGRPCGetFilteredNamedGroupingPolicyResponse encodes endpoint GetFilteredNamedGroupingPolicyRequest to gRPC Array2DResponse
 func encodeGRPCGetFilteredNamedGroupingPolicyResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetFilteredNamedGroupingPolicyResponse)
 	return pb.Array2DResponse{D2: toD2(resp.Results), Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetAllSubjectsRequest decodes grpc EmptyRequest to endpoint GetAllSubjects
+// decodeGRPCGetAllSubjectsRequest decodes gRPC EmptyRequest to endpoint GetAllSubjects
 func decodeGRPCGetAllSubjectsRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EmptyRequest)
 	return endpoints.GetAllSubjectsRequest{Enforcer: req.Enforcer}, nil
 }
 
-// encodeGRPCGetAllSubjectsResponse encodes endpoint GetAllSubjectsResponse to grpc ArrayResponse
+// encodeGRPCGetAllSubjectsResponse encodes endpoint GetAllSubjectsResponse to gRPC ArrayResponse
 func encodeGRPCGetAllSubjectsResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetAllSubjectsResponse)
 	return pb.ArrayResponse{Array: resp.Results, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetAllNamedSubjectsRequest decodes grpc SimpleGetRequest to endpoint GetAllNamedSubjectsRequest
+// decodeGRPCGetAllNamedSubjectsRequest decodes gRPC SimpleGetRequest to endpoint GetAllNamedSubjectsRequest
 func decodeGRPCGetAllNamedSubjectsRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.SimpleGetRequest)
 	return endpoints.GetAllNamedSubjectsRequest{Enforcer: req.Enforcer, PType: req.PType}, nil
 }
 
-// encodeGRPCGetAllNamedSubjectsResponse encodes endpoint GetAllNamedSubjectsResponse to grpc ArrayResponse
+// encodeGRPCGetAllNamedSubjectsResponse encodes endpoint GetAllNamedSubjectsResponse to gRPC ArrayResponse
 func encodeGRPCGetAllNamedSubjectsResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetAllNamedSubjectsResponse)
 	return pb.ArrayResponse{Array: resp.Results, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetAllObjectsRequest decodes grpc EmptyRequest to endpoint GetAllObjectsRequest
+// decodeGRPCGetAllObjectsRequest decodes gRPC EmptyRequest to endpoint GetAllObjectsRequest
 func decodeGRPCGetAllObjectsRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.EmptyRequest)
 	return endpoints.GetAllObjectsRequest{Enforcer: req.Enforcer}, nil
 }
 
-// encodeGRPCGetAllObjectsResponse encodes endpoint GetAllObjectResponse to grpc ArrayResponse
+// encodeGRPCGetAllObjectsResponse encodes endpoint GetAllObjectResponse to gRPC ArrayResponse
 func encodeGRPCGetAllObjectsResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*endpoints.GetAllObjectsResponse)
 	return pb.ArrayResponse{Array: resp.Results, Err: err2str(resp.Err)}, nil
 }
 
-// decodeGRPCGetAllNamedObjectsRequest decodes grpc SimpleGetRequest to endpoint GetAllNamedObjectsRequest
+// decodeGRPCGetAllNamedObjectsRequest decodes gRPC SimpleGetRequest to endpoint GetAllNamedObjectsRequest
 func decodeGRPCGetAllNamedObjectsRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	req := grpcReq.(*pb.SimpleGetRequest)
 	return endpoints.GetAllNamedObjectsRequest{Enforcer: req.Enforcer, PType: req.PType}, nil
@@ -1380,7 +1381,7 @@ func err2str(err error) string {
 	return err.Error()
 }
 
-// toD2 convert [][]string to grpc Array2DResponseD2
+// toD2 convert [][]string to gRPC Array2DResponseD2
 func toD2(s [][]string) []*pb.Array2DResponseD {
 	d2 := make([]*pb.Array2DResponseD, len(s))
 	for i, ss := range s {
