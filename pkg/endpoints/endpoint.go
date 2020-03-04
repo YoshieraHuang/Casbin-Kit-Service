@@ -321,8 +321,8 @@ func MakeSavePolicyEndpoint(s services.Server) endpoint.Endpoint {
 func MakeNewAdapterEndpoint(s services.Server) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(NewAdapterRequest)
-		enforcer, err := s.NewAdapter(ctx, req.DriverName, req.ConnectString, req.DbSpecified)
-		return NewAdapterResponse{Enforcer: enforcer, Err: err}, nil
+		adapter, err := s.NewAdapter(ctx, req.DriverName, req.ConnectString, req.DbSpecified)
+		return NewAdapterResponse{Adapter: adapter, Err: err}, nil
 	}
 }
 
@@ -1103,8 +1103,8 @@ type SavePolicyResponse struct {
 
 // NewAdapterResponse collects the response parameters for the NewAdapter method.
 type NewAdapterResponse struct {
-	Enforcer services.EnforcerHandler `json:"enforcer"`
-	Err      error                    `json:"-"`
+	Adapter services.AdapterHandler `json:"adapter"`
+	Err     error                   `json:"-"`
 }
 
 // AddPolicyResponse collects the response parameters for the AddPolicy method.

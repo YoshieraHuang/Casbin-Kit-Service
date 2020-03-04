@@ -90,7 +90,8 @@ message NewEnforcerRequest {
 }
 
 message NewEnforcerResponse {
-  int32 handler = 1;
+  int32 enforcer = 1;
+  string err = 2;
 }
 
 message NewAdapterRequest {
@@ -102,56 +103,60 @@ message NewAdapterRequest {
 
 message NewAdapterResponse {
   int32 handler = 1;
+  string err = 2;
 }
 
 message EnforceRequest {
-  int32 enforcerHandler = 1;
+  int32 enforcer = 1;
   repeated string params = 2;
 }
 
 message BoolResponse {
   bool res = 1;
+  string err = 2;
 }
 
 message EmptyRequest {
-  int32 handler = 1;
+  int32 enforcer = 1;
 }
 
 message EmptyResponse {
+  string err = 1;
 }
 
 message PolicyRequest {
-  int32 enforcerHandler = 1;
+  int32 enforcer = 1;
   string pType = 2;
   repeated string params = 3;
 }
 
 message SimpleGetRequest {
-  int32 enforcerHandler = 1;
+  int32 enforcer = 1;
   string pType = 2;
 }
 
 message ArrayResponse {
   repeated string array = 1;
+  string err = 2;
 }
 
 message FilteredPolicyRequest {
-  int32 enforcerHandler = 1;
+  int32 enforcer = 1;
   string pType = 2;
   int32 fieldIndex = 3;
   repeated string fieldValues = 4;
 }
 
 message UserRoleRequest {
-  int32 enforcerHandler = 1;
+  int32 enforcer = 1;
   string user = 2;
   string role = 3;
 }
 
 message PermissionRequest {
-  int32 enforcerHandler = 1;
+  int32 enforcer = 1;
   string user = 2;
-  repeated string permission = 3;
+  repeated string permissions = 3;
 } 
 
 message Array2DResponse {
@@ -160,4 +165,5 @@ message Array2DResponse {
   }
 
   repeated d d2 = 1;
+  string err = 2;
 }
