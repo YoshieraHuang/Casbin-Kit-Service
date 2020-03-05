@@ -17,6 +17,7 @@ package services
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/persist"
+	"github.com/go-kit/kit/log"
 )
 
 type service struct {
@@ -24,7 +25,7 @@ type service struct {
 	adapterMap  map[AdapterHandler]persist.Adapter
 }
 
-// NewServer returns a struct that implements Server interface
+// NewServer returns a basic struct that implements Server interface
 func NewServer() Server {
 	s := service{}
 
@@ -32,4 +33,11 @@ func NewServer() Server {
 	s.adapterMap = map[AdapterHandler]persist.Adapter{}
 
 	return &s
+}
+
+// New returns go-kit service Server
+func New(logger log.Logger) Server {
+	s := NewServer()
+	s = LoggingMiddleware(logger)(s)
+	return s
 }
