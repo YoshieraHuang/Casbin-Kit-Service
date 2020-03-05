@@ -12,7 +12,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/metrics"
+	"github.com/go-kit/kit/metrics/prometheus"
 	kitgrpc "github.com/go-kit/kit/transport/grpc"
 	"github.com/oklog/oklog/pkg/group"
 	"github.com/spf13/viper"
@@ -23,6 +28,7 @@ func main() {
 	config := viper.New()
 	config.SetDefault("address.http", ":8081")
 	config.SetDefault("address.grpc", ":8082")
+	config.SetDefault("address.debug", ":8080")
 	if err := config.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 		} else {
@@ -32,6 +38,7 @@ func main() {
 
 	httpAddr := config.GetString("address.http")
 	grpcAddr := config.GetString("address.grpc")
+	debugAddr := config.GetString("address.debug")
 
 	var logger log.Logger
 	{
@@ -40,14 +47,41 @@ func main() {
 		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 
+	var duration metrics.Histogram
+	{
+		duration = prometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+			Namespace: "auth",
+			Subsystem: "casbinsvc",
+			Name:      "request_duration_seconds",
+			Help:      "Request duration in seconds",
+		}, []string{"method", "success"})
+	}
+	http.DefaultServeMux.Handle("/metrics", promhttp.Handler())
+
 	var (
 		service     = services.New(logger)
-		endpoints   = endpoints.New(service, logger)
+		endpoints   = endpoints.New(service, logger, duration)
 		httpHandler = transports.NewHTTPHandler(endpoints)
 		grpcService = transports.NewGRPCService(endpoints)
 	)
 
 	var g group.Group
+	{
+		// The debug listener mounts the http.DefaultServeMux, and serves up
+		// stuff like the Prometheus metrics route, the Go debug and profiling
+		// routes, and so on.
+		debugListener, err := net.Listen("tcp", debugAddr)
+		if err != nil {
+			logger.Log("transport", "debug/HTTP", "during", "Listen", "err", err)
+			os.Exit(1)
+		}
+		g.Add(func() error {
+			logger.Log("transport", "debug/HTTP", "addr", debugAddr)
+			return http.Serve(debugListener, http.DefaultServeMux)
+		}, func(error) {
+			debugListener.Close()
+		})
+	}
 	{
 		httpListener, err := net.Listen("tcp", httpAddr)
 		if err != nil {

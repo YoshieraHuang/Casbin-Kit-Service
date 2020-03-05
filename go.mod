@@ -9,6 +9,7 @@ require (
 	github.com/golang/protobuf v1.3.2
 	github.com/oklog/oklog v0.3.2
 	github.com/oklog/run v1.1.0 // indirect
+	github.com/prometheus/client_golang v0.9.3
 	github.com/spf13/viper v1.6.2
 	google.golang.org/grpc v1.27.1
 )

@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/metrics"
 )
 
 // Set collects all of the endpoints that compose a service. It's meant to
@@ -68,266 +69,318 @@ type Set struct {
 
 // New returns a Set that wraps the provided server, and wires in all of the
 // expected endpoint middlewares via the various parameters.
-func New(s services.Server, logger log.Logger) Set {
+func New(s services.Server, logger log.Logger, duration metrics.Histogram) Set {
 	var newEnforcer endpoint.Endpoint
 	{
 		newEnforcer = MakeNewEnforcerEndpoint(s)
 		newEnforcer = LoggingMiddleware(log.With(logger, "method", "NewEnforcer"))(newEnforcer)
+		newEnforcer = InstrumentingMiddleware(duration.With("method", "NewEnforcer"))(newEnforcer)
 	}
 	var enforce endpoint.Endpoint
 	{
 		enforce = MakeEnforceEndpoint(s)
 		enforce = LoggingMiddleware(log.With(logger, "method", "Enforce"))(enforce)
+		enforce = InstrumentingMiddleware(duration.With("method", "Enforce"))(enforce)
 	}
 	var loadPolicy endpoint.Endpoint
 	{
 		loadPolicy = MakeLoadPolicyEndpoint(s)
 		loadPolicy = LoggingMiddleware(log.With(logger, "method", "LoadPolicy"))(loadPolicy)
+		loadPolicy = InstrumentingMiddleware(duration.With("method", "LoadPolicy"))(loadPolicy)
 	}
 	var savePolicy endpoint.Endpoint
 	{
 		savePolicy = MakeSavePolicyEndpoint(s)
 		savePolicy = LoggingMiddleware(log.With(logger, "method", "SavePolicy"))(savePolicy)
+		savePolicy = InstrumentingMiddleware(duration.With("method", "SavePolicy"))(savePolicy)
 	}
 	var newAdapter endpoint.Endpoint
 	{
 		newAdapter = MakeNewAdapterEndpoint(s)
 		newAdapter = LoggingMiddleware(log.With(logger, "method", "NewAdapter"))(newAdapter)
+		newAdapter = InstrumentingMiddleware(duration.With("method", "NewAdapter"))(newAdapter)
 	}
 	var addPolicy endpoint.Endpoint
 	{
 		addPolicy = MakeAddPolicyEndpoint(s)
 		addPolicy = LoggingMiddleware(log.With(logger, "method", "AddPolicy"))(addPolicy)
+		addPolicy = InstrumentingMiddleware(duration.With("method", "AddPolicy"))(addPolicy)
 	}
 	var addNamedPolicy endpoint.Endpoint
 	{
 		addNamedPolicy = MakeAddNamedPolicyEndpoint(s)
 		addNamedPolicy = LoggingMiddleware(log.With(logger, "method", "AddNamedPolicy"))(addNamedPolicy)
+		addNamedPolicy = InstrumentingMiddleware(duration.With("method", "AddNamedPolicy"))(addNamedPolicy)
 	}
 	var removePolicy endpoint.Endpoint
 	{
 		removePolicy = MakeRemovePolicyEndpoint(s)
 		removePolicy = LoggingMiddleware(log.With(logger, "method", "RemovePolicy"))(removePolicy)
+		removePolicy = InstrumentingMiddleware(duration.With("method", "RemovePolicy"))(removePolicy)
 	}
 	var removeNamedPolicy endpoint.Endpoint
 	{
 		removeNamedPolicy = MakeRemoveNamedPolicyEndpoint(s)
 		removeNamedPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveNamedPolicy"))(removeNamedPolicy)
+		removeNamedPolicy = InstrumentingMiddleware(duration.With("method", "RemoveNamedPolicy"))(removeNamedPolicy)
 	}
 	var removeFilteredPolicy endpoint.Endpoint
 	{
 		removeFilteredPolicy = MakeRemoveFilteredPolicyEndpoint(s)
 		removeFilteredPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveFilteredPolicy"))(removeFilteredPolicy)
+		removeFilteredPolicy = InstrumentingMiddleware(duration.With("method", "RemoveFilteredPolicy"))(removeFilteredPolicy)
 	}
 	var removeFilteredNamedPolicy endpoint.Endpoint
 	{
 		removeFilteredNamedPolicy = MakeRemoveFilteredNamedPolicyEndpoint(s)
 		removeFilteredNamedPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveFilteredNamedPolicy"))(removeFilteredNamedPolicy)
+		removeFilteredNamedPolicy = InstrumentingMiddleware(duration.With("method", "RemoveFilteredNamedPolicy"))(removeFilteredNamedPolicy)
 	}
 	var getPolicy endpoint.Endpoint
 	{
 		getPolicy = MakeGetPolicyEndpoint(s)
 		getPolicy = LoggingMiddleware(log.With(logger, "method", "GetPolicy"))(getPolicy)
+		getPolicy = InstrumentingMiddleware(duration.With("method", "GetPolicy"))(getPolicy)
 	}
 	var getNamedPolicy endpoint.Endpoint
 	{
 		getNamedPolicy = MakeGetNamedPolicyEndpoint(s)
 		getNamedPolicy = LoggingMiddleware(log.With(logger, "method", "GetNamedPolicy"))(getNamedPolicy)
+		getNamedPolicy = InstrumentingMiddleware(duration.With("method", "GetNamedPolicy"))(getNamedPolicy)
 	}
 	var getFilteredPolicy endpoint.Endpoint
 	{
 		getFilteredPolicy = MakeGetFilteredPolicyEndpoint(s)
 		getFilteredPolicy = LoggingMiddleware(log.With(logger, "method", "GetFilteredPolicy"))(getFilteredPolicy)
+		getFilteredPolicy = InstrumentingMiddleware(duration.With("method", "GetFilteredPolicy"))(getFilteredPolicy)
 	}
 	var getFilteredNamedPolicy endpoint.Endpoint
 	{
 		getFilteredNamedPolicy = MakeGetFilteredNamedPolicyEndpoint(s)
 		getFilteredNamedPolicy = LoggingMiddleware(log.With(logger, "method", "GetFilteredNamedPolicy"))(getFilteredNamedPolicy)
+		getFilteredNamedPolicy = InstrumentingMiddleware(duration.With("method", "GetFilteredNamedPolicy"))(getFilteredNamedPolicy)
 	}
 	var addGroupingPolicy endpoint.Endpoint
 	{
 		addGroupingPolicy = MakeAddGroupingPolicyEndpoint(s)
 		addGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "AddGroupingPolicy"))(addGroupingPolicy)
+		addGroupingPolicy = InstrumentingMiddleware(duration.With("method", "AddGroupingPolicy"))(addGroupingPolicy)
 	}
 	var addNamedGroupingPolicy endpoint.Endpoint
 	{
 		addNamedGroupingPolicy = MakeAddNamedGroupingPolicyEndpoint(s)
 		addNamedGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "AddNamedGroupingPolicy"))(addNamedGroupingPolicy)
+		addNamedGroupingPolicy = InstrumentingMiddleware(duration.With("method", "AddNamedGroupingPolicy"))(addNamedGroupingPolicy)
 	}
 	var removeGroupingPolicy endpoint.Endpoint
 	{
 		removeGroupingPolicy = MakeRemoveGroupingPolicyEndpoint(s)
 		removeGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveGroupingPolicy"))(removeGroupingPolicy)
+		removeGroupingPolicy = InstrumentingMiddleware(duration.With("method", "RemoveGroupingPolicy"))(removeGroupingPolicy)
 	}
 	var removeNamedGroupingPolicy endpoint.Endpoint
 	{
 		removeNamedGroupingPolicy = MakeRemoveNamedGroupingPolicyEndpoint(s)
 		removeNamedGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveNamedGroupingPolicy"))(removeNamedGroupingPolicy)
+		removeNamedGroupingPolicy = InstrumentingMiddleware(duration.With("method", "RemoveNamedGroupingPolicy"))(removeNamedGroupingPolicy)
 	}
 	var removeFilteredGroupingPolicy endpoint.Endpoint
 	{
 		removeFilteredGroupingPolicy = MakeRemoveFilteredGroupingPolicyEndpoint(s)
 		removeFilteredGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveFilteredGroupingPolicy"))(removeFilteredGroupingPolicy)
+		removeFilteredGroupingPolicy = InstrumentingMiddleware(duration.With("method", "RemoveFilteredGroupingPolicy"))(removeFilteredGroupingPolicy)
 	}
 	var removeFilteredNamedGroupingPolicy endpoint.Endpoint
 	{
 		removeFilteredNamedGroupingPolicy = MakeRemoveFilteredNamedGroupingPolicyEndpoint(s)
 		removeFilteredNamedGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "RemoveFilteredNamedGroupingPolicy"))(removeFilteredNamedGroupingPolicy)
+		removeFilteredNamedGroupingPolicy = InstrumentingMiddleware(duration.With("method", "RemoveFilteredNamedGroupingPolicy"))(removeFilteredNamedGroupingPolicy)
 	}
 	var getGroupingPolicy endpoint.Endpoint
 	{
 		getGroupingPolicy = MakeGetGroupingPolicyEndpoint(s)
 		getGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "GetGroupingPolicy"))(getGroupingPolicy)
+		getGroupingPolicy = InstrumentingMiddleware(duration.With("method", "GetGroupingPolicy"))(getGroupingPolicy)
 	}
 	var getNamedGroupingPolicy endpoint.Endpoint
 	{
 		getNamedGroupingPolicy = MakeGetNamedGroupingPolicyEndpoint(s)
 		getNamedGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "GetNamedGroupingPolicy"))(getNamedGroupingPolicy)
+		getNamedGroupingPolicy = InstrumentingMiddleware(duration.With("method", "GetNamedGroupingPolicy"))(getNamedGroupingPolicy)
 	}
 	var getFilteredGroupingPolicy endpoint.Endpoint
 	{
 		getFilteredGroupingPolicy = MakeGetFilteredGroupingPolicyEndpoint(s)
 		getFilteredGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "GetFilteredGroupingPolicy"))(getFilteredGroupingPolicy)
+		getFilteredGroupingPolicy = InstrumentingMiddleware(duration.With("method", "GetFilteredGroupingPolicy"))(getFilteredGroupingPolicy)
 	}
 	var getFilteredNamedGroupingPolicy endpoint.Endpoint
 	{
 		getFilteredNamedGroupingPolicy = MakeGetFilteredNamedGroupingPolicyEndpoint(s)
 		getFilteredNamedGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "GetFilteredNamedGroupingPolicy"))(getFilteredNamedGroupingPolicy)
+		getFilteredNamedGroupingPolicy = InstrumentingMiddleware(duration.With("method", "GetFilteredNamedGroupingPolicy"))(getFilteredNamedGroupingPolicy)
 	}
 	var getAllSubjects endpoint.Endpoint
 	{
 		getAllSubjects = MakeGetAllSubjectsEndpoint(s)
 		getAllSubjects = LoggingMiddleware(log.With(logger, "method", "GetAllSubjects"))(getAllSubjects)
+		getAllSubjects = InstrumentingMiddleware(duration.With("method", "GetAllSubjects"))(getAllSubjects)
 	}
 	var getAllNamedSubjects endpoint.Endpoint
 	{
 		getAllNamedSubjects = MakeGetAllNamedSubjectsEndpoint(s)
 		getAllNamedSubjects = LoggingMiddleware(log.With(logger, "method", "GetAllNamedSubjects"))(getAllNamedSubjects)
+		getAllNamedSubjects = InstrumentingMiddleware(duration.With("method", "GetAllNamedSubjects"))(getAllNamedSubjects)
 	}
 	var getAllObjects endpoint.Endpoint
 	{
 		getAllObjects = MakeGetAllObjectsEndpoint(s)
 		getAllObjects = LoggingMiddleware(log.With(logger, "method", "GetAllObjects"))(getAllObjects)
+		getAllObjects = InstrumentingMiddleware(duration.With("method", "GetAllObjects"))(getAllObjects)
 	}
 	var getAllNamedObjects endpoint.Endpoint
 	{
 		getAllNamedObjects = MakeGetAllNamedObjectsEndpoint(s)
 		getAllNamedObjects = LoggingMiddleware(log.With(logger, "method", "GetAllNamedObjects"))(getAllNamedObjects)
+		getAllNamedObjects = InstrumentingMiddleware(duration.With("method", "GetAllNamedObjects"))(getAllNamedObjects)
 	}
 	var getAllActions endpoint.Endpoint
 	{
 		getAllActions = MakeGetAllActionsEndpoint(s)
 		getAllActions = LoggingMiddleware(log.With(logger, "method", "GetAllActions"))(getAllActions)
+		getAllActions = InstrumentingMiddleware(duration.With("method", "GetAllActions"))(getAllActions)
 	}
 	var getAllNamedActions endpoint.Endpoint
 	{
 		getAllNamedActions = MakeGetAllNamedActionsEndpoint(s)
 		getAllNamedActions = LoggingMiddleware(log.With(logger, "method", "GetAllNamedActions"))(getAllNamedActions)
+		getAllNamedActions = InstrumentingMiddleware(duration.With("method", "GetAllNamedActions"))(getAllNamedActions)
 	}
 	var getAllRoles endpoint.Endpoint
 	{
 		getAllRoles = MakeGetAllRolesEndpoint(s)
 		getAllRoles = LoggingMiddleware(log.With(logger, "method", "GetAllRoles"))(getAllRoles)
+		getAllRoles = InstrumentingMiddleware(duration.With("method", "GetAllRoles"))(getAllRoles)
 	}
 	var getAllNamedRoles endpoint.Endpoint
 	{
 		getAllNamedRoles = MakeGetAllNamedRolesEndpoint(s)
 		getAllNamedRoles = LoggingMiddleware(log.With(logger, "method", "GetAllNamedRoles"))(getAllNamedRoles)
+		getAllNamedRoles = InstrumentingMiddleware(duration.With("method", "GetAllNamedRoles"))(getAllNamedRoles)
 	}
 	var hasPolicy endpoint.Endpoint
 	{
 		hasPolicy = MakeHasPolicyEndpoint(s)
 		hasPolicy = LoggingMiddleware(log.With(logger, "method", "HasPolicy"))(hasPolicy)
+		hasPolicy = InstrumentingMiddleware(duration.With("method", "HasPolicy"))(hasPolicy)
 	}
 	var hasNamedPolicy endpoint.Endpoint
 	{
 		hasNamedPolicy = MakeHasNamedPolicyEndpoint(s)
 		hasNamedPolicy = LoggingMiddleware(log.With(logger, "method", "HasNamedPolicy"))(hasNamedPolicy)
+		hasNamedPolicy = InstrumentingMiddleware(duration.With("method", "HasNamedPolicy"))(hasNamedPolicy)
 	}
 	var hasGroupingPolicy endpoint.Endpoint
 	{
 		hasGroupingPolicy = MakeHasGroupingPolicyEndpoint(s)
 		hasGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "HasGroupingPolicy"))(hasGroupingPolicy)
+		hasGroupingPolicy = InstrumentingMiddleware(duration.With("method", "HasGroupingPolicy"))(hasGroupingPolicy)
 	}
 	var hasNamedGroupingPolicy endpoint.Endpoint
 	{
 		hasNamedGroupingPolicy = MakeHasNamedGroupingPolicyEndpoint(s)
 		hasNamedGroupingPolicy = LoggingMiddleware(log.With(logger, "method", "HasNamedGroupingPolicy"))(hasNamedGroupingPolicy)
+		hasNamedGroupingPolicy = InstrumentingMiddleware(duration.With("method", "HasNamedGroupingPolicy"))(hasNamedGroupingPolicy)
 	}
 	var hasRoleForUser endpoint.Endpoint
 	{
 		hasRoleForUser = MakeHasRoleForUserEndpoint(s)
 		hasRoleForUser = LoggingMiddleware(log.With(logger, "method", "HasRoleForUser"))(hasRoleForUser)
+		hasRoleForUser = InstrumentingMiddleware(duration.With("method", "HasRoleForUser"))(hasRoleForUser)
 	}
 	var addRoleForUser endpoint.Endpoint
 	{
 		addRoleForUser = MakeAddRoleForUserEndpoint(s)
 		addRoleForUser = LoggingMiddleware(log.With(logger, "method", "AddRoleForUser"))(addRoleForUser)
+		addRoleForUser = InstrumentingMiddleware(duration.With("method", "AddRoleForUser"))(addRoleForUser)
 	}
 	var deleteRoleForUser endpoint.Endpoint
 	{
 		deleteRoleForUser = MakeDeleteRoleForUserEndpoint(s)
 		deleteRoleForUser = LoggingMiddleware(log.With(logger, "method", "DeleteRoleForUser"))(deleteRoleForUser)
+		deleteRoleForUser = InstrumentingMiddleware(duration.With("method", "DeleteRoleForUser"))(deleteRoleForUser)
 	}
 	var deleteRolesForUser endpoint.Endpoint
 	{
 		deleteRolesForUser = MakeDeleteRolesForUserEndpoint(s)
 		deleteRolesForUser = LoggingMiddleware(log.With(logger, "method", "DeleteRolesForUser"))(deleteRolesForUser)
+		deleteRolesForUser = InstrumentingMiddleware(duration.With("method", "DeleteRolesForUser"))(deleteRolesForUser)
 	}
 	var deleteUser endpoint.Endpoint
 	{
 		deleteUser = MakeDeleteUserEndpoint(s)
 		deleteUser = LoggingMiddleware(log.With(logger, "method", "DeleteUser"))(deleteUser)
+		deleteUser = InstrumentingMiddleware(duration.With("method", "DeleteUser"))(deleteUser)
 	}
 	var deleteRole endpoint.Endpoint
 	{
 		deleteRole = MakeDeleteRoleEndpoint(s)
 		deleteRole = LoggingMiddleware(log.With(logger, "method", "DeleteRole"))(deleteRole)
+		deleteRole = InstrumentingMiddleware(duration.With("method", "DeleteRole"))(deleteRole)
 	}
 	var deletePermission endpoint.Endpoint
 	{
 		deletePermission = MakeDeletePermissionEndpoint(s)
 		deletePermission = LoggingMiddleware(log.With(logger, "method", "DeletePermission"))(deletePermission)
+		deletePermission = InstrumentingMiddleware(duration.With("method", "DeletePermission"))(deletePermission)
 	}
 	var getRolesForUser endpoint.Endpoint
 	{
 		getRolesForUser = MakeGetRolesForUserEndpoint(s)
 		getRolesForUser = LoggingMiddleware(log.With(logger, "method", "GetRolesForUser"))(getRolesForUser)
+		getRolesForUser = InstrumentingMiddleware(duration.With("method", "GetRolesForUser"))(getRolesForUser)
 	}
 	var getImplicitRolesForUser endpoint.Endpoint
 	{
 		getImplicitRolesForUser = MakeGetImplicitRolesForUserEndpoint(s)
 		getImplicitRolesForUser = LoggingMiddleware(log.With(logger, "method", "GetImplicitRolesForUser"))(getImplicitRolesForUser)
+		getImplicitRolesForUser = InstrumentingMiddleware(duration.With("method", "GetImplicitRolesForUser"))(getImplicitRolesForUser)
 	}
 	var getUsersForRole endpoint.Endpoint
 	{
 		getUsersForRole = MakeGetUsersForRoleEndpoint(s)
 		getUsersForRole = LoggingMiddleware(log.With(logger, "method", "GetUsersForRole"))(getUsersForRole)
+		getUsersForRole = InstrumentingMiddleware(duration.With("method", "GetUsersForRole"))(getUsersForRole)
 	}
 	var addPermissionForUser endpoint.Endpoint
 	{
 		addPermissionForUser = MakeAddPermissionForUserEndpoint(s)
 		addPermissionForUser = LoggingMiddleware(log.With(logger, "method", "AddPermissionForUser"))(addPermissionForUser)
+		addPermissionForUser = InstrumentingMiddleware(duration.With("method", "AddPermissionForUser"))(addPermissionForUser)
 	}
 	var deletePermissionForUser endpoint.Endpoint
 	{
 		deletePermissionForUser = MakeDeletePermissionForUserEndpoint(s)
 		deletePermissionForUser = LoggingMiddleware(log.With(logger, "method", "DeletePermissionForUser"))(deletePermissionForUser)
+		deletePermissionForUser = InstrumentingMiddleware(duration.With("method", "DeletePermissionForUser"))(deletePermissionForUser)
 	}
 	var getPermissionsForUser endpoint.Endpoint
 	{
 		getPermissionsForUser = MakeGetPermissionsForUserEndpoint(s)
 		getPermissionsForUser = LoggingMiddleware(log.With(logger, "method", "GetPermissionsForUser"))(getPermissionsForUser)
+		getPermissionsForUser = InstrumentingMiddleware(duration.With("method", "GetPermissionsForUser"))(getPermissionsForUser)
 	}
 	var getImplicitPermissionsForUser endpoint.Endpoint
 	{
 		getImplicitPermissionsForUser = MakeGetImplicitPermissionsForUserEndpoint(s)
 		getImplicitPermissionsForUser = LoggingMiddleware(log.With(logger, "method", "GetImplicitPermissionsForUser"))(getImplicitPermissionsForUser)
+		getImplicitPermissionsForUser = InstrumentingMiddleware(duration.With("method", "GetImplicitPermissionsForUser"))(getImplicitPermissionsForUser)
 	}
 	var hasPermissionForUser endpoint.Endpoint
 	{
 		hasPermissionForUser = MakeHasPermissionForUserEndpoint(s)
 		hasPermissionForUser = LoggingMiddleware(log.With(logger, "method", "HasPermissionForUser"))(hasPermissionForUser)
+		hasPermissionForUser = InstrumentingMiddleware(duration.With("method", "HasPermissionForUser"))(hasPermissionForUser)
 	}
 	return Set{NewEnforcerEndpoint: getNamedPolicy, EnforceEndpoint: enforce, LoadPolicyEndpoint: loadPolicy, SavePolicyEndpoint: savePolicy, NewAdapterEndpoint: newAdapter, AddPolicyEndpoint: addPolicy, AddNamedPolicyEndpoint: addNamedPolicy, RemovePolicyEndpoint: removePolicy, RemoveNamedPolicyEndpoint: removeNamedPolicy, RemoveFilteredPolicyEndpoint: removeFilteredPolicy, RemoveFilteredNamedPolicyEndpoint: removeFilteredNamedPolicy, GetPolicyEndpoint: getPolicy, GetNamedPolicyEndpoint: getNamedPolicy, GetFilteredPolicyEndpoint: getFilteredPolicy, GetFilteredNamedPolicyEndpoint: getFilteredNamedPolicy, AddGroupingPolicyEndpoint: addGroupingPolicy, AddNamedGroupingPolicyEndpoint: addNamedGroupingPolicy, RemoveGroupingPolicyEndpoint: removeGroupingPolicy, RemoveNamedGroupingPolicyEndpoint: removeNamedGroupingPolicy, RemoveFilteredGroupingPolicyEndpoint: removeFilteredGroupingPolicy, RemoveFilteredNamedGroupingPolicyEndpoint: removeFilteredNamedGroupingPolicy, GetGroupingPolicyEndpoint: getGroupingPolicy, GetNamedGroupingPolicyEndpoint: getNamedGroupingPolicy, GetFilteredGroupingPolicyEndpoint: getFilteredGroupingPolicy, GetFilteredNamedGroupingPolicyEndpoint: getFilteredNamedGroupingPolicy, GetAllSubjectsEndpoint: getAllSubjects, GetAllNamedSubjectsEndpoint: getAllNamedSubjects, GetAllObjectsEndpoint: getAllObjects, GetAllNamedObjectsEndpoint: getAllNamedObjects, GetAllActionsEndpoint: getAllActions, GetAllNamedActionsEndpoint: getAllNamedActions, GetAllRolesEndpoint: getAllRoles, GetAllNamedRolesEndpoint: getAllNamedRoles, HasPolicyEndpoint: hasPolicy, HasNamedPolicyEndpoint: hasNamedPolicy, HasGroupingPolicyEndpoint: hasGroupingPolicy, HasNamedGroupingPolicyEndpoint: hasNamedGroupingPolicy, HasRoleForUserEndpoint: hasRoleForUser, AddRoleForUserEndpoint: addRoleForUser, DeleteRoleForUserEndpoint: deleteRoleForUser, DeleteRolesForUserEndpoint: deleteRolesForUser, DeleteUserEndpoint: deleteUser, DeleteRoleEndpoint: deleteRole, DeletePermissionEndpoint: deletePermission, GetRolesForUserEndpoint: getRolesForUser, GetImplicitRolesForUserEndpoint: getImplicitRolesForUser, GetUsersForRoleEndpoint: getUsersForRole, AddPermissionForUserEndpoint: addPermissionForUser, DeletePermissionForUserEndpoint: deletePermissionForUser, GetPermissionsForUserEndpoint: getPermissionsForUser, GetImplicitPermissionsForUserEndpoint: getImplicitPermissionsForUser, HasPermissionForUserEndpoint: hasPermissionForUser}
 }

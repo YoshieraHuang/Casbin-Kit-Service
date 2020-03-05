@@ -12,7 +12,7 @@ type Middleware func(Server) Server
 // LoggingMiddleware takes a logger as a dependency and returns a service Middleware
 func LoggingMiddleware(logger log.Logger) Middleware {
 	return func(next Server) Server {
-		return loggingMiddleware{logger: logger, next: next}
+		return &loggingMiddleware{logger: logger, next: next}
 	}
 }
 
@@ -22,7 +22,7 @@ type loggingMiddleware struct {
 }
 
 // NewEnforcer implements Server interface
-func (mw loggingMiddleware) NewEnforcer(ctx context.Context, modelText string, adapter AdapterHandler) (handler EnforcerHandler, err error) {
+func (mw *loggingMiddleware) NewEnforcer(ctx context.Context, modelText string, adapter AdapterHandler) (handler EnforcerHandler, err error) {
 	defer func() {
 		mw.logger.Log("method", "NewEnforcer", "modelText", modelText, "adapter", adapter, "enforcer", handler, "error", err)
 	}()
@@ -30,7 +30,7 @@ func (mw loggingMiddleware) NewEnforcer(ctx context.Context, modelText string, a
 }
 
 // Enforce implements Server interface
-func (mw loggingMiddleware) Enforce(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) Enforce(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "Enforce", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -38,7 +38,7 @@ func (mw loggingMiddleware) Enforce(ctx context.Context, enforcer EnforcerHandle
 }
 
 // LoadPolicy implements Server interface
-func (mw loggingMiddleware) LoadPolicy(ctx context.Context, enforcer EnforcerHandler) (err error) {
+func (mw *loggingMiddleware) LoadPolicy(ctx context.Context, enforcer EnforcerHandler) (err error) {
 	defer func() {
 		mw.logger.Log("method", "LoadPolicy", "enforcer", enforcer, "error", err)
 	}()
@@ -46,7 +46,7 @@ func (mw loggingMiddleware) LoadPolicy(ctx context.Context, enforcer EnforcerHan
 }
 
 // SavePolicy implements Server interface
-func (mw loggingMiddleware) SavePolicy(ctx context.Context, enforcer EnforcerHandler) (err error) {
+func (mw *loggingMiddleware) SavePolicy(ctx context.Context, enforcer EnforcerHandler) (err error) {
 	defer func() {
 		mw.logger.Log("method", "SavePolicy", "enforcer", enforcer, "error", err)
 	}()
@@ -54,7 +54,7 @@ func (mw loggingMiddleware) SavePolicy(ctx context.Context, enforcer EnforcerHan
 }
 
 // NewAdapter implements Server interface
-func (mw loggingMiddleware) NewAdapter(ctx context.Context, driverName, connectString string, dbSpecified bool) (handler EnforcerHandler, err error) {
+func (mw *loggingMiddleware) NewAdapter(ctx context.Context, driverName, connectString string, dbSpecified bool) (handler EnforcerHandler, err error) {
 	defer func() {
 		mw.logger.Log("method", "NewAdapter", "driverName", driverName, "connectString", connectString, "dbSpecified", dbSpecified, "enforcer", handler, "error", err)
 	}()
@@ -62,7 +62,7 @@ func (mw loggingMiddleware) NewAdapter(ctx context.Context, driverName, connectS
 }
 
 // AddPolicy implements Server interface
-func (mw loggingMiddleware) AddPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) AddPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "AddPolicy", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -70,7 +70,7 @@ func (mw loggingMiddleware) AddPolicy(ctx context.Context, enforcer EnforcerHand
 }
 
 // AddNamedPolicy implements Server interface
-func (mw loggingMiddleware) AddNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) AddNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "AddNamedPolicy", "enforcer", enforcer, "pType", pType, "params", params, "result", result, "error", err)
 	}()
@@ -78,7 +78,7 @@ func (mw loggingMiddleware) AddNamedPolicy(ctx context.Context, enforcer Enforce
 }
 
 // RemovePolicy implements Server interface
-func (mw loggingMiddleware) RemovePolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemovePolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemovePolicy", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -86,7 +86,7 @@ func (mw loggingMiddleware) RemovePolicy(ctx context.Context, enforcer EnforcerH
 }
 
 // RemoveNamedPolicy implements Server interface
-func (mw loggingMiddleware) RemoveNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveNamedPolicy", "enforcer", enforcer, "pType", pType, "params", params, "result", result, "error", err)
 	}()
@@ -94,7 +94,7 @@ func (mw loggingMiddleware) RemoveNamedPolicy(ctx context.Context, enforcer Enfo
 }
 
 // RemoveFilterePolicy implements Server interface
-func (mw loggingMiddleware) RemoveFilteredPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveFilteredPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveFilteredPolicy", "enforcer", enforcer, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "result", result, "error", err)
 	}()
@@ -102,7 +102,7 @@ func (mw loggingMiddleware) RemoveFilteredPolicy(ctx context.Context, enforcer E
 }
 
 // RevmoeFilteredNamedPolicy implements Server interface
-func (mw loggingMiddleware) RemoveFilteredNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveFilteredNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveFilteredNamedPolicy", "enforcer", enforcer, "pType", pType, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "result", result, "error", err)
 	}()
@@ -110,7 +110,7 @@ func (mw loggingMiddleware) RemoveFilteredNamedPolicy(ctx context.Context, enfor
 }
 
 // GetPolicy implements Server interface
-func (mw loggingMiddleware) GetPolicy(ctx context.Context, enforcer EnforcerHandler) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetPolicy(ctx context.Context, enforcer EnforcerHandler) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetPolicy", "enforcer", enforcer, "results", results, "error", err)
 	}()
@@ -118,7 +118,7 @@ func (mw loggingMiddleware) GetPolicy(ctx context.Context, enforcer EnforcerHand
 }
 
 // GetNamedPolicy implements Server interface
-func (mw loggingMiddleware) GetNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetNamedPolicy", "enforcer", enforcer, "pType", pType, "results", results, "error", err)
 	}()
@@ -126,7 +126,7 @@ func (mw loggingMiddleware) GetNamedPolicy(ctx context.Context, enforcer Enforce
 }
 
 // GetFilteredPolicy implements Server interface
-func (mw loggingMiddleware) GetFilteredPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetFilteredPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetFilteredPolicy", "enforcer", enforcer, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "results", results, "error", err)
 	}()
@@ -134,7 +134,7 @@ func (mw loggingMiddleware) GetFilteredPolicy(ctx context.Context, enforcer Enfo
 }
 
 // GetFilteredNamedPolicy implements Server interface
-func (mw loggingMiddleware) GetFilteredNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetFilteredNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetFilteredNamedPolicy", "enforcer", enforcer, "pType", pType, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "results", results, "error", err)
 	}()
@@ -142,7 +142,7 @@ func (mw loggingMiddleware) GetFilteredNamedPolicy(ctx context.Context, enforcer
 }
 
 // AddGroupingPolicy implements Server interface
-func (mw loggingMiddleware) AddGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) AddGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "AddGroupingPolicy", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -150,7 +150,7 @@ func (mw loggingMiddleware) AddGroupingPolicy(ctx context.Context, enforcer Enfo
 }
 
 // AddNamedGroupingPolicy implements Server interface
-func (mw loggingMiddleware) AddNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) AddNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "AddNamedGroupingPolicy", "enforcer", enforcer, "pType", pType, "params", params, "result", result, "error", err)
 	}()
@@ -158,7 +158,7 @@ func (mw loggingMiddleware) AddNamedGroupingPolicy(ctx context.Context, enforcer
 }
 
 // RemoveGroupingPolicy implements Server interface
-func (mw loggingMiddleware) RemoveGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveGroupingPolicy", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -166,7 +166,7 @@ func (mw loggingMiddleware) RemoveGroupingPolicy(ctx context.Context, enforcer E
 }
 
 // RemoveNamedGroupingPolicy implements Server interface
-func (mw loggingMiddleware) RemoveNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveNamedGroupingPolicy", "enforcer", enforcer, "pType", pType, "params", params, "result", result, "error", err)
 	}()
@@ -174,7 +174,7 @@ func (mw loggingMiddleware) RemoveNamedGroupingPolicy(ctx context.Context, enfor
 }
 
 // RemoveFilteredGroupingPolicy implements Server interface
-func (mw loggingMiddleware) RemoveFilteredGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveFilteredGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveFilteredGroupingPolicy", "enforcer", enforcer, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "result", result, "error", err)
 	}()
@@ -182,7 +182,7 @@ func (mw loggingMiddleware) RemoveFilteredGroupingPolicy(ctx context.Context, en
 }
 
 // RemoveFilteredNamedGroupingPolicy implements Server interface
-func (mw loggingMiddleware) RemoveFilteredNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (result bool, err error) {
+func (mw *loggingMiddleware) RemoveFilteredNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "RemoveFilteredNamedGroupingPolicy", "enforcer", enforcer, "pType", pType, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "result", result, "error", err)
 	}()
@@ -190,7 +190,7 @@ func (mw loggingMiddleware) RemoveFilteredNamedGroupingPolicy(ctx context.Contex
 }
 
 // GetGroupingPolicy implements Server interface
-func (mw loggingMiddleware) GetGroupingPolicy(ctx context.Context, enforcer EnforcerHandler) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetGroupingPolicy(ctx context.Context, enforcer EnforcerHandler) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetGroupingPolicy", "enforcer", enforcer, "results", results, "error", err)
 	}()
@@ -198,7 +198,7 @@ func (mw loggingMiddleware) GetGroupingPolicy(ctx context.Context, enforcer Enfo
 }
 
 // GetNamedPolicy implements Server interface
-func (mw loggingMiddleware) GetNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetNamedPolicy", "enforcer", enforcer, "pType", pType, "results", results, "error", err)
 	}()
@@ -206,7 +206,7 @@ func (mw loggingMiddleware) GetNamedGroupingPolicy(ctx context.Context, enforcer
 }
 
 // GetFilteredGroupingPolicy implements Server interface
-func (mw loggingMiddleware) GetFilteredGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetFilteredGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, fieldIndex int, fieldValues []string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetFilteredGroupingPolicy", "enforcer", enforcer, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "results", results, "error", err)
 	}()
@@ -214,7 +214,7 @@ func (mw loggingMiddleware) GetFilteredGroupingPolicy(ctx context.Context, enfor
 }
 
 // GetFilteredNamedGroupingPolicy implements Server interface
-func (mw loggingMiddleware) GetFilteredNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetFilteredNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, fieldIndex int, fieldValues []string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetFilteredNamedGroupingPolicy", "enforcer", enforcer, "pType", pType, "fieldIndex", fieldIndex, "fieldValues", fieldValues, "results", results, "error", err)
 	}()
@@ -222,7 +222,7 @@ func (mw loggingMiddleware) GetFilteredNamedGroupingPolicy(ctx context.Context, 
 }
 
 // GetAllSubjects implements Server interface
-func (mw loggingMiddleware) GetAllSubjects(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllSubjects(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllSubjects", "enforcer", enforcer, "resutls", results, "error", err)
 	}()
@@ -230,7 +230,7 @@ func (mw loggingMiddleware) GetAllSubjects(ctx context.Context, enforcer Enforce
 }
 
 // GetAllNamedSubjects implements Server interface
-func (mw loggingMiddleware) GetAllNamedSubjects(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllNamedSubjects(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllNamedSubjects", "enforcer", enforcer, "pType", pType, "results", results, "error", err)
 	}()
@@ -238,7 +238,7 @@ func (mw loggingMiddleware) GetAllNamedSubjects(ctx context.Context, enforcer En
 }
 
 // GetAllObjects implements Server interface
-func (mw loggingMiddleware) GetAllObjects(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllObjects(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllObjects", "enforcer", enforcer, "results", results, "error", err)
 	}()
@@ -246,7 +246,7 @@ func (mw loggingMiddleware) GetAllObjects(ctx context.Context, enforcer Enforcer
 }
 
 // GetAllNamedObjects implements Server interface
-func (mw loggingMiddleware) GetAllNamedObjects(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllNamedObjects(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllNamedObjects", "enforcer", enforcer, "pType", pType)
 	}()
@@ -254,7 +254,7 @@ func (mw loggingMiddleware) GetAllNamedObjects(ctx context.Context, enforcer Enf
 }
 
 // GetAllActions implements Server interface
-func (mw loggingMiddleware) GetAllActions(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllActions(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllActions", "enforcer", enforcer, "results", results, "error", err)
 	}()
@@ -262,7 +262,7 @@ func (mw loggingMiddleware) GetAllActions(ctx context.Context, enforcer Enforcer
 }
 
 // GetAllNamedActions implements Server interface
-func (mw loggingMiddleware) GetAllNamedActions(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllNamedActions(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllNamedActions", "enforcer", enforcer, "pType", pType, "results", results, "error", err)
 	}()
@@ -270,7 +270,7 @@ func (mw loggingMiddleware) GetAllNamedActions(ctx context.Context, enforcer Enf
 }
 
 // GetAllRoles implements Server interface
-func (mw loggingMiddleware) GetAllRoles(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllRoles(ctx context.Context, enforcer EnforcerHandler) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllRoles", "enforcer", enforcer, "results", results, "error", err)
 	}()
@@ -278,7 +278,7 @@ func (mw loggingMiddleware) GetAllRoles(ctx context.Context, enforcer EnforcerHa
 }
 
 // GetAllNamedRoles implements Server interface
-func (mw loggingMiddleware) GetAllNamedRoles(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
+func (mw *loggingMiddleware) GetAllNamedRoles(ctx context.Context, enforcer EnforcerHandler, pType string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetAllNamedRoles", "enforcer", enforcer, "pType", pType, "results", results, "error", err)
 	}()
@@ -286,7 +286,7 @@ func (mw loggingMiddleware) GetAllNamedRoles(ctx context.Context, enforcer Enfor
 }
 
 // HasPolicy implements Server interface
-func (mw loggingMiddleware) HasPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) HasPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "HasPolicy", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -294,7 +294,7 @@ func (mw loggingMiddleware) HasPolicy(ctx context.Context, enforcer EnforcerHand
 }
 
 // HasNamedPolicy implements Server interface
-func (mw loggingMiddleware) HasNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) HasNamedPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "HasNamedPolicy", "enforcer", enforcer, "pType", pType, "params", params, "result", result, "error", err)
 	}()
@@ -302,7 +302,7 @@ func (mw loggingMiddleware) HasNamedPolicy(ctx context.Context, enforcer Enforce
 }
 
 // HasGroupingPolicy implements Server interface
-func (mw loggingMiddleware) HasGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) HasGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "HasGroupingPolicy", "enforcer", enforcer, "params", params, "result", result, "error", err)
 	}()
@@ -310,7 +310,7 @@ func (mw loggingMiddleware) HasGroupingPolicy(ctx context.Context, enforcer Enfo
 }
 
 // HasNamedGroupingPolicy implements Server interface
-func (mw loggingMiddleware) HasNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
+func (mw *loggingMiddleware) HasNamedGroupingPolicy(ctx context.Context, enforcer EnforcerHandler, pType string, params []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "HasNamedGroupingPolicy", "enforcer", enforcer, "pType", pType, "params", params, "result", result, "error", err)
 	}()
@@ -318,7 +318,7 @@ func (mw loggingMiddleware) HasNamedGroupingPolicy(ctx context.Context, enforcer
 }
 
 // HasRoleForUser implements Server interface
-func (mw loggingMiddleware) HasRoleForUser(ctx context.Context, enforcer EnforcerHandler, user, role string) (result bool, err error) {
+func (mw *loggingMiddleware) HasRoleForUser(ctx context.Context, enforcer EnforcerHandler, user, role string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "HasRoleForUser", "enforcer", enforcer, "user", user, "role", role, "result", result, "error", err)
 	}()
@@ -326,7 +326,7 @@ func (mw loggingMiddleware) HasRoleForUser(ctx context.Context, enforcer Enforce
 }
 
 // AddRoleForUser implements Server interface
-func (mw loggingMiddleware) AddRoleForUser(ctx context.Context, enforcer EnforcerHandler, user, role string) (result bool, err error) {
+func (mw *loggingMiddleware) AddRoleForUser(ctx context.Context, enforcer EnforcerHandler, user, role string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "AddRoleForUser", "enforcer", enforcer, "user", user, "role", role, "result", result, "error", err)
 	}()
@@ -334,7 +334,7 @@ func (mw loggingMiddleware) AddRoleForUser(ctx context.Context, enforcer Enforce
 }
 
 // DeleteRoleForUser implements Server interface
-func (mw loggingMiddleware) DeleteRoleForUser(ctx context.Context, enforcer EnforcerHandler, user, role string) (result bool, err error) {
+func (mw *loggingMiddleware) DeleteRoleForUser(ctx context.Context, enforcer EnforcerHandler, user, role string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "DeleteRoleForUser", "enforcer", enforcer, "user", user, "role", role, "result", result, "error", err)
 	}()
@@ -342,7 +342,7 @@ func (mw loggingMiddleware) DeleteRoleForUser(ctx context.Context, enforcer Enfo
 }
 
 // DeleteRolesForUser implements Server interface
-func (mw loggingMiddleware) DeleteRolesForUser(ctx context.Context, enforcer EnforcerHandler, user string) (result bool, err error) {
+func (mw *loggingMiddleware) DeleteRolesForUser(ctx context.Context, enforcer EnforcerHandler, user string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "DeleteRolesForUser", "enforcer", enforcer, "user", user, "result", result, "error", err)
 	}()
@@ -350,7 +350,7 @@ func (mw loggingMiddleware) DeleteRolesForUser(ctx context.Context, enforcer Enf
 }
 
 // DeleteUser implements Server interface
-func (mw loggingMiddleware) DeleteUser(ctx context.Context, enforcer EnforcerHandler, user string) (result bool, err error) {
+func (mw *loggingMiddleware) DeleteUser(ctx context.Context, enforcer EnforcerHandler, user string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "DeleteUser", "enforcer", enforcer, "user", user, "result", result, "error", err)
 	}()
@@ -358,7 +358,7 @@ func (mw loggingMiddleware) DeleteUser(ctx context.Context, enforcer EnforcerHan
 }
 
 // DeleteRole implements Server interface
-func (mw loggingMiddleware) DeleteRole(ctx context.Context, enforcer EnforcerHandler, role string) (result bool, err error) {
+func (mw *loggingMiddleware) DeleteRole(ctx context.Context, enforcer EnforcerHandler, role string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "DeleteRole", "enforcer", enforcer, "role", role, "result", result, "error", err)
 	}()
@@ -366,7 +366,7 @@ func (mw loggingMiddleware) DeleteRole(ctx context.Context, enforcer EnforcerHan
 }
 
 // DeletePermission implements Server interface
-func (mw loggingMiddleware) DeletePermission(ctx context.Context, enforcer EnforcerHandler, permission []string) (result bool, err error) {
+func (mw *loggingMiddleware) DeletePermission(ctx context.Context, enforcer EnforcerHandler, permission []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "DeletePermission", "enforcer", enforcer, "permission", permission, "result", result, "error", err)
 	}()
@@ -374,7 +374,7 @@ func (mw loggingMiddleware) DeletePermission(ctx context.Context, enforcer Enfor
 }
 
 // GetRolesForUser implements Server interface
-func (mw loggingMiddleware) GetRolesForUser(ctx context.Context, enforcer EnforcerHandler, user string) (results []string, err error) {
+func (mw *loggingMiddleware) GetRolesForUser(ctx context.Context, enforcer EnforcerHandler, user string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetRolesForUser", "enforcer", enforcer, "user", user, "results", results, "error", err)
 	}()
@@ -382,7 +382,7 @@ func (mw loggingMiddleware) GetRolesForUser(ctx context.Context, enforcer Enforc
 }
 
 // GetImplicitRolesForUser implements Server interface
-func (mw loggingMiddleware) GetImplicitRolesForUser(ctx context.Context, enforcer EnforcerHandler, user string) (results []string, err error) {
+func (mw *loggingMiddleware) GetImplicitRolesForUser(ctx context.Context, enforcer EnforcerHandler, user string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetImplicitRolesForUser", "enforcer", enforcer, "user", user, "results", results, "error", err)
 	}()
@@ -390,7 +390,7 @@ func (mw loggingMiddleware) GetImplicitRolesForUser(ctx context.Context, enforce
 }
 
 // GetUsersForRole implements Server interface
-func (mw loggingMiddleware) GetUsersForRole(ctx context.Context, enforcer EnforcerHandler, role string) (results []string, err error) {
+func (mw *loggingMiddleware) GetUsersForRole(ctx context.Context, enforcer EnforcerHandler, role string) (results []string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetUsersForRole", "enforcer", enforcer, "role", role, "results", results, "error", err)
 	}()
@@ -398,7 +398,7 @@ func (mw loggingMiddleware) GetUsersForRole(ctx context.Context, enforcer Enforc
 }
 
 // AddPermissionForUser implements Server interface
-func (mw loggingMiddleware) AddPermissionForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (result bool, err error) {
+func (mw *loggingMiddleware) AddPermissionForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "AddPermissionForUser", "enforcer", enforcer, "user", user, "permissions", permissions, "result", result, "error", err)
 	}()
@@ -406,7 +406,7 @@ func (mw loggingMiddleware) AddPermissionForUser(ctx context.Context, enforcer E
 }
 
 // DeletePermissionForUser implements Server interface
-func (mw loggingMiddleware) DeletePermissionForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (result bool, err error) {
+func (mw *loggingMiddleware) DeletePermissionForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "DeletePermissionForUser", "enforcer", enforcer, "user", user, "permissions", permissions, "result", result, "error", err)
 	}()
@@ -414,7 +414,7 @@ func (mw loggingMiddleware) DeletePermissionForUser(ctx context.Context, enforce
 }
 
 // GetPermissionsForUser implements Server interface
-func (mw loggingMiddleware) GetPermissionsForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetPermissionsForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetPermissionsForUser", "enforcer", enforcer, "user", user, "permissions", permissions, "results", results, "error", err)
 	}()
@@ -422,7 +422,7 @@ func (mw loggingMiddleware) GetPermissionsForUser(ctx context.Context, enforcer 
 }
 
 // GetImplicitPermissionsForUser implements Server interface
-func (mw loggingMiddleware) GetImplicitPermissionsForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (results [][]string, err error) {
+func (mw *loggingMiddleware) GetImplicitPermissionsForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (results [][]string, err error) {
 	defer func() {
 		mw.logger.Log("method", "GetImplicitPermissionsForUser", "enforcer", enforcer, "user", user, "permissions", permissions, "results", results, "error", err)
 	}()
@@ -430,7 +430,7 @@ func (mw loggingMiddleware) GetImplicitPermissionsForUser(ctx context.Context, e
 }
 
 // HasPermissionForUser implements Server interface
-func (mw loggingMiddleware) HasPermissionForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (result bool, err error) {
+func (mw *loggingMiddleware) HasPermissionForUser(ctx context.Context, enforcer EnforcerHandler, user string, permissions []string) (result bool, err error) {
 	defer func() {
 		mw.logger.Log("method", "HasPermissionForUser", "enforcer", enforcer, "user", user, "permissions", permissions, "result", result, "error", err)
 	}()
