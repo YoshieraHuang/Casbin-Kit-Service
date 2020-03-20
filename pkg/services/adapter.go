@@ -7,12 +7,15 @@ import (
 	"github.com/casbin/casbin/v2/persist"
 	fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
 	gormadapter "github.com/casbin/gorm-adapter/v2"
+
+	// import sqlite driver
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 var (
 	// supportDriverNames contains the supported driver name
 	// Note here `[...]` is used instead of `[]` to get a (fixed size) array instead of a slice
-	supportDriverNames = [...]string{"file", "mysql", "postgres", "mssql"}
+	supportDriverNames = [...]string{"file", "mysql", "postgres", "sqlite3"}
 )
 
 var (

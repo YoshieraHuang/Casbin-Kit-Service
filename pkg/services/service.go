@@ -21,13 +21,16 @@ import (
 )
 
 type service struct {
-	enforcerMap map[EnforcerHandler]*casbin.Enforcer
-	adapterMap  map[AdapterHandler]persist.Adapter
+	enforcerMap      map[EnforcerHandler]*casbin.Enforcer
+	adapterMap       map[AdapterHandler]persist.Adapter
+	defaultModelFile string
 }
 
 // NewServer returns a basic struct that implements Server interface
-func NewServer() Server {
-	s := service{}
+func NewServer(defaultModelFile string) Server {
+	s := service{
+		defaultModelFile: defaultModelFile,
+	}
 
 	s.enforcerMap = map[EnforcerHandler]*casbin.Enforcer{}
 	s.adapterMap = map[AdapterHandler]persist.Adapter{}
@@ -36,8 +39,8 @@ func NewServer() Server {
 }
 
 // New returns go-kit service Server
-func New(logger log.Logger) Server {
-	s := NewServer()
+func New(logger log.Logger, defaultModelFile string) Server {
+	s := NewServer(defaultModelFile)
 	s = LoggingMiddleware(logger)(s)
 	return s
 }

@@ -26,9 +26,14 @@ import (
 
 func main() {
 	config := viper.New()
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("/")
+
 	config.SetDefault("address.http", ":8081")
 	config.SetDefault("address.grpc", ":8082")
 	config.SetDefault("address.debug", ":8080")
+	config.SetDefault("model.default", "./model/model.conf")
 	if err := config.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 		} else {
@@ -39,6 +44,7 @@ func main() {
 	httpAddr := config.GetString("address.http")
 	grpcAddr := config.GetString("address.grpc")
 	debugAddr := config.GetString("address.debug")
+	defaultModelFile := config.GetString("model.default")
 
 	var logger log.Logger
 	{
@@ -59,7 +65,7 @@ func main() {
 	http.DefaultServeMux.Handle("/metrics", promhttp.Handler())
 
 	var (
-		service     = services.New(logger)
+		service     = services.New(logger, defaultModelFile)
 		endpoints   = endpoints.New(service, logger, duration)
 		httpHandler = transports.NewHTTPHandler(endpoints)
 		grpcService = transports.NewGRPCService(endpoints)

@@ -59,29 +59,26 @@ func (s *service) NewEnforcer(ctx context.Context, modelText string, adapterHand
 		}
 	}
 
-	// TODO: load default model
+	var m model.Model
+	var err error
 	if modelText == "" {
-		return -1, errors.New("Empty Model")
-	}
-
-	if a == nil {
-		// init an enforcer without policies
-		m, err := model.NewModelFromString(modelText)
+		m, err = model.NewModelFromFile(s.defaultModelFile)
 		if err != nil {
 			return -1, err
 		}
+	} else {
+		m, err = model.NewModelFromString(modelText)
+		if err != nil {
+			return -1, err
+		}
+	}
 
+	if a == nil {
 		e, err = casbin.NewEnforcer(m)
 		if err != nil {
 			return -1, err
 		}
 	} else {
-		// init an enforcer with policies
-		m, err := model.NewModelFromString(modelText)
-		if err != nil {
-			return -1, err
-		}
-
 		e, err = casbin.NewEnforcer(m, a)
 		if err != nil {
 			return -1, err
